@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- App Name -->
+    <string name="app_name">ATG</string>
+
+    <!-- Nav Drawer Menu Items -->
+    <string-array name="nav_drawer_items">
+        <item>Führung</item>
+        <item>Umgebung</item>
+        <item>Karte</item>
+        <item>Einstellungen</item>
+        <item>Update</item>
+        <item>Über</item>
+    </string-array>
+
+    <!-- Navigation Drawer open -->
+    <string name="navigation_drawer_open">Navigation Drawer öffnen</string>
+    <!-- Navigation Drawer close -->
+    <string name="navigation_drawer_close">Navigation Drawer schließen</string>
+    <!-- Menu click -->
+    <string name="helper">Hilfe</string>
+    <!-- Menu click 2 -->
+    <string name="refresh">Aktualisieren</string>
+
+    <!-- Guider Fragment Stop Button -->
+    <string name="image">Bild</string>
+
+    <!-- Splash Activity -->
+    <string name="splash">splash</string>
+
+    <!-- Reset -->
+    <string name="reset">Reset</string>
+
+    <!-- Guider Fragment Button -->
+    <string name="guider">Führung</string>
+
+    <!-- UpdateOperation Class -->
+    <string name="uo1">Überprüfung auf Updates&#8230;</string>
+    <string name="uo2">Update ist fehlgeschlagen. Bitte später nochmals probieren!</string>
+    <string name="uo3">Update war erfolgreich.</string>
+    <string name="uo4">Point(s) of Interest wurden hinzugefügt!</string>
+    <string name="uo5">und</string>
+    <string name="uo6">Daten werden gespeichert&#8230;</string>
+    <string name="uo7">Kein Update nötig. Die Applikation ist auf dem neuesten Stand!</string>
+    <string name="uo8">Updates werden heruntergeladen&#8230;</string>
+    <string name="uo9">Datenpaket</string>
+    <string name="uo10">empfangen.</string>
+
+    <!-- AboutFragment Class -->
+    <string name="af_version">Version</string>
+    <string name="af_developer">Entwickler\nManuela Weilharter</string>
+    <string name="af2">logo</string>
+
+    <!-- TestStylist Class -->
+    <string name="ts1">Allgemein</string>
+
+    <!-- GoogleMapsFragment Class -->
+    <string name="gmf1">Du</string>
+    <string name="gmf2">Karte wird geladen&#8230;</string>
+    <string name="gmf3">Ihr Standort wird nicht angezeigt. Möchten Sie die Einstellungen öffnen um die Standortdienste zu aktivieren?</string>
+
+    <!-- GuiderDetailsFragment Class -->
+    <string name="gdf1">Keine Sehenswürdigkeiten gefunden. Bitte die Einstellungen überprüfen und über den Menüpunkt Update eine Aktualisierung durchführen.</string>
+    <string name="gdf2">Automatischer Guide wird gestartet&#8230;</string>
+    <string name="gdf3">Im Moment sind leider keine Sehenswürdigkeiten innerhalb von</string>
+    <string name="gdf4">Meter verfügbar. Die näheste unbesuchte Sehenswürdigkeit ist</string>
+    <string name="gdf5">Meter entfernt).</string>
+    <string name="gdf6">Es gibt keine unbesuchten Sehenswürdigkeiten mehr. Bitte setzen Sie die Datenbank über das Einstellungsmenü zurück!</string>
+    <string name="gdf7">Initialisiere T(ext)-T(o)-S(peech)&#8230;</string>
+    <string name="gdf8">wurde in einer Entfernung von</string>
+    <string name="gdf9">Meter gefunden.</string>
+    <string name="gdf10">Lade&#8230;</string>
+    <string name="gdf11">Starte Text-To-Speech Engine&#8230;</string>
+    <string name="gdf12">Um alle Features nutzen zu können braucht der automatische Guider aktivierte Standortdienste.</string>
+    <string name="gdf13">Die Umgebungsansicht benötigt aktivierte Standortdienste. Bitte einschalten und nochmal probieren.</string>
+    <string name="gdf14">Aktueller Standort konnte leider noch nicht ermittelt werden. Bitte für bessere Genauigkeit die Verwendung von GPS und Drahtlosnetzwerken in den Standortservice Einstellungen aktivieren.</string>
+    <string name="gdf15">Aktualisiere Standort&#8230;</string>
+    <string name="gdf16">Attraktion in der Nähe</string>
+    <string name="gdf17">. Ansehen?</string>
+    <string name="gdf18">Automatischer Guide gestoppt, play drücken um ihn fortzusetzen.</string>
+
+    <!-- GuiderFragment Class -->
+    <string name="gf1">Sind Sie sicher, dass Sie die Anwendung beenden wollen?</string>
+    <string name="gf2">Ja</string>
+    <string name="gf3">Nein</string>
+
+    <!-- MainActivity Class -->
+    <string name="ma1">Bitte warten. Die Anwendung initialisiert die Daten&#8230;</string>
+    <string name="ma2">Update benötigt!</string>
+    <string name="ma3">Für das initiale Update ist eine Internetverbindung nötig. Möchten Sie die WIFI Einstellungen öffnen?</string>
+    <string name="ma4">Abbrechen</string>
+    <string name="ma5">Ok</string>
+
+    <!-- NavigationDrawerFragment Class -->
+    <string name="ndf1">Drücken Sie GUIDE um den Automatischen Touristenführer zu starten.\n\nDrücken Sie MENU oder das Anwendungssymbol um das Menü zu öffnen!</string>
+    <string name="ndf2">Diese Ansicht zeigt die nähesten Sehenswürdigkeiten (maximal 25). Jede von ihnen ist anklickbar, falls Sie zusätzliche Informationen erhalten möchten.\n\nFarbige Einträge bedeuten unbesuchte und ausgegraute Marker besuchte Sehenswürdigkeiten.</string>
+    <string name="ndf3">Diese Ansicht zeigt eine Karte mit allen Sehenswürdigkeiten. Jeder Marker ist anklickbar, ebenso alle Namen um zusätzliche Informationen zu erhalten.</string>
+    <string name="ndf4">Das Infolevel Normal zeigt den ganzen Text von Wikipedia, Zusammenfassung die wichtigsten 5 Sätze jedes Absatzes und Übersicht nur einen kurzen einleitenden Text.\n\nEs werden neben dem einleitenden nur jene Absätze gezeigt, die den gewählten Kategorien entsprechen.</string>
+    <string name="ndf5">Hier kann ein Update des Inhaltes der Anwendung durchgeführt werden.\n\nAchtung: Dies kann 1&#8211;2 Minuten dauern und benötigt eine aktive Internetverbindung!</string>
+    <string name="ndf6">Allgemeine Informationen über die Anwendung.</string>
+    <string name="ndf7">Default</string>
+    <string name="ndf8">Hilfe</string>
+    <string name="ndf9">Der automatische Guide Modus wurde gestartet. Sie können nun durch die Stadt gehen, der Guider informiert Sie sobald eine interessante Sehenswürdigkeit in Reichweite kommt.</string>
+
+    <!-- NearbyFragment Class -->
+    <string name="nf1">Keine Sehenswürdigkeiten gefunden. \nBitte die Einstellungen überprüfen und über den Menüpunkt Update eine Aktualisierung durchführen.</string>
+    <string name="nf2">Standort konnte nicht ermittelt werden.</string>
+    <string name="nf3">Möchten Sie die Einstellungen öffnen um die Standortdienste zu aktivieren?</string>
+    <string name="nf4">Sehenswürdigkeiten in der Umgebung werden ermittelt&#8230;</string>
+    <string name="nf5">Aktueller Standort konnte leider noch nicht ermittelt werden. Bitte für bessere Genauigkeit die Verwendung von GPS und Drahtlosnetzwerken in den Standortservice Einstellungen aktivieren.</string>
+
+    <!-- SettingsFragment Class -->
+    <string name="sf1">Bitte wählen Sie die Kategorien über die Sie Informationen erhalten möchten:</string>
+    <string name="sf2">Bitte wählen Sie ein Informationslevel:</string>
+    <string name="sf3">Normal</string>
+    <string name="sf4">Zusammenfassung</string>
+    <string name="sf5">Übersicht</string>
+    <string name="sf6">Info Level: Normal</string>
+    <string name="sf7">Info Level: Zusammenfassung</string>
+    <string name="sf8">Info Level: Übersicht</string>
+
+    <string-array name="sf6">
+        <item>Architektur</item>
+        <item>Geschichte</item>
+        <item>Sport</item>
+        <item>Geografie</item>
+    </string-array>
+
+    <string name="sf10">Mit diesem Knopf können sie alle Sehenswürdigkeiten als unbesucht markieren.</string>
+    <string name="sf11">Sind Sie sicher, dass Sie die Daten zurücksetzen möchten? Alle besuchten POIs werden wieder als unbesucht markiert.</string>
+    <string name="sf12">Erfolg! Daten wurden zurückgesetzt!</string>
+
+    <string-array name="sf13">
+        <item>25</item>
+        <item>50</item>
+        <item>100</item>
+        <item>250</item>
+        <item>500</item>
+        <item>1000</item>
+        <item>2500</item>
+        <item>5000</item>
+    </string-array>
+
+    <string name="sf14">Bitte wählen Sie die maximale Distanz für den Automatic Guider.</string>
+    <string name="sf15">Reset</string>
+    <string name="sf16">Präferenzen</string>
+    <string name="sf17">Automatisches Hervorheben des aktiven Satzes:</string>
+    <string name="sf18">Wieviele Benachrichtigungen sollen empfangen werden:</string>
+    <string name="sf19">Verstecken von bereits besichtigten Sehenswürdigkeiten:</string>
+    <string name="sf20">Verwenden einer eigenen TTS Engine (erfordert Neustart):</string>
+    <string-array name="sf21">
+        <item>Unbeschränkt</item>
+        <item>1 pro Minute</item>
+        <item>1 pro &#189; Stunde</item>
+        <item>1 pro Stunde</item>
+        <item>Keine</item>
+    </string-array>
+
+    <!-- UpdateFragment Class -->
+    <string name="uf1">Sie können Ihre Anwendung mit diesem Knopf manuell aktualisieren. Dazu wird eine aktive Internetverbindung benötigt!</string>
+    <string name="uf2">Sind Sie sicher, dass Sie die Anwendung aktualisieren möchten?</string>
+    <string name="uf3">Keine Internetverbindung vorhanden!</string>
+    <string name="uf4">Möchten Sie die WIFI Einstellungen öffnen?</string>
+
+    <!-- PoiDetailsFragment Class -->
+    <string name="pdf1">Es gibt keinen weiteren Absatz.</string>
+    <string name="pdf2">Es gibt keinen früheren Absatz.</string>
+    <string name="pdf3">Standort</string>
+
+    <!-- MultiSelectionSpinner Class -->
+    <string name="ms1">Es muss mindestens eine Kategorie gewählt werden. \n\nKategorien wurden zurückgesetzt!</string>
+
+    <!-- PullDownView -->
+    <string name="pdv1">Ziehen zum Aktualisieren</string>
+    <string name="pdv2">Loslassen zum Aktualisieren</string>
+    <string name="pdv3">Wird aktualisiert...</string>
+
+    <!-- ListViewAdapter -->
+    <string name="lva1">Nach unten ziehen für Update...</string>
+    <string name="lva2">Zuletzt aktualisiert:</string>
+
+</resources>

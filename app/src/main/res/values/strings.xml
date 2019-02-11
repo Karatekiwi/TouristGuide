@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- App Name -->
+    <string name="app_name">ATG</string>
+
+    <!-- Nav Drawer Menu Items -->
+    <string-array name="nav_drawer_items">
+        <item>Guider</item>
+        <item>Nearby</item>
+        <item>MapView</item>
+        <item>Settings</item>
+        <item>Update</item>
+        <item>About</item>
+    </string-array>
+
+    <!-- Navigation Drawer open -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <!-- Navigation Drawer close -->
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <!-- Menu click -->
+    <string name="helper">Help</string>
+    <!-- Menu click 2 -->
+    <string name="refresh">Refresh</string>
+
+    <!-- Guider Fragment Stop Button -->
+    <string name="image">Img</string>
+
+    <!-- Splash Activity -->
+    <string name="splash">splash</string>
+
+    <!-- Reset -->
+    <string name="reset">Reset</string>
+
+    <!-- Guider Fragment Button -->
+    <string name="guider">Guider</string>
+
+    <!-- UpdateOperation Class -->
+    <string name="uo1">Checking for updates&#8230;</string>
+    <string name="uo2">Update failed. Please try again later!</string>
+    <string name="uo3">Update successful.</string>
+    <string name="uo4"> point(s) of interest have been obtained!</string>
+    <string name="uo5">and</string>
+    <string name="uo6">Saving the data&#8230;</string>
+    <string name="uo7">No update necessary. The Application is up-to-date!</string>
+    <string name="uo8">Updates are being downloaded&#8230;</string>
+    <string name="uo9">Data packet</string>
+    <string name="uo10">received.</string>
+
+    <!-- AboutFragment Class -->
+    <string name="af_version">Version</string>
+    <string name="af_developer">Developer\nManuela Weilharter</string>
+    <string name="af2">logo</string>
+
+    <!-- TestStylist Class -->
+    <string name="ts1">General</string>
+
+    <!-- GoogleMapsFragment Class -->
+    <string name="gmf1">You</string>
+    <string name="gmf2">Initializing the map&#8230;</string>
+    <string name="gmf3">Your current location will not be shown on the map. Do you want to go to the settings to activate the location services?</string>
+
+    <!-- GuiderDetailsFragment Class -->
+    <string name="gdf1">No sights found. \nPlease check your settings and use the menu item update to obtain the newest data.</string>
+    <string name="gdf2">Starting Automatic Guider&#8230;</string>
+    <string name="gdf3">There are currently no sights within reach of</string>
+    <string name="gdf4">meter. The nearest unvisited attraction is</string>
+    <string name="gdf5">meter away).</string>
+    <string name="gdf6">There are no more unvisited sights. Please reset the database via the settings menu!</string>
+    <string name="gdf7">Initializing T(ext)-T(o)-S(peech)&#8230;</string>
+    <string name="gdf8">was found at a distance of</string>
+    <string name="gdf9">meter.</string>
+    <string name="gdf10">Loading&#8230;</string>
+    <string name="gdf11">Loading Text-To-Speech Engine&#8230;</string>
+    <string name="gdf12">For all functions to work properly the Location Services have to be active.</string>
+    <string name="gdf13">For the Nearby View to work properly, the Location Services have to be active. Please enable them and try again.</string>
+    <string name="gdf14">Current location could not yet be determined. Please activate the usage of GPS and Wireless Networks in the Location Service Settings for higher accuracy.</string>
+    <string name="gdf15">Refreshing location&#8230;</string>
+    <string name="gdf16">New Attraction nearby</string>
+    <string name="gdf17">. View it?</string>
+    <string name="gdf18">Automatic Guide has been stopped, press play to resume.</string>
+
+    <!-- GuiderFragment Class -->
+    <string name="gf1">Are you sure you want to exit?</string>
+    <string name="gf2">Yes</string>
+    <string name="gf3">No</string>
+
+    <!-- MainActivity Class -->
+    <string name="ma1">Please wait. Application is initializing the data&#8230;</string>
+    <string name="ma2">Update needed!</string>
+    <string name="ma3">For the initial update an internet connection is required. Do you want to go to WIFI settings?</string>
+    <string name="ma4">Cancle</string>
+    <string name="ma5">OK</string>
+
+    <!-- NavigationDrawerFragment Class -->
+    <string name="ndf1">Press GUIDE to start the automatic guiding mode.\n\nPress MENU or the application icon to open the menu!</string>
+    <string name="ndf2">This view shows the nearest sights (at most 25). Each one is clickable, if you want to get additional information.\n\nColored entries denote unvisited and gray markers visited sights</string>
+    <string name="ndf3">This view shows a map with all sights. Each marker is clickable to show the name of the attraction.</string>
+    <string name="ndf4">Infolevel Normal shows the whole text from Wikipedia, Summary shows the most important 5 sentences of each section and Overview only a short introduction.\n\nNext to the introduction section, there will be only sections which match your chosen categories.</string>
+    <string name="ndf5">Updates the content data for the application.\n\nINFO: This could take 1&#150;2 minutes and requires an active internet connection.</string>
+    <string name="ndf6">Information about the application.</string>
+    <string name="ndf7">Default</string>
+    <string name="ndf8">Help</string>
+    <string name="ndf9">The Automatic Guider was started. You can now walk through the city, the Guider will inform you, if an interesting sight comes within reach.</string>
+
+    <!-- NearbyFragment Class -->
+    <string name="nf1">No sights found. \nPlease check your settings and use the menu item update to obtain the newest data.</string>
+    <string name="nf2">Could not determine your location.</string>
+    <string name="nf3">Do you want to go to the settings to activate the location services?</string>
+    <string name="nf4">Nearby sights are being located&#8230;</string>
+    <string name="nf5">Current location could not yet be determined. Please activate the usage of GPS and Wireless Networks in the Location Service Settings for higher accuracy.</string>
+
+    <!-- SettingsFragment Class -->
+    <string name="sf1">Please choose the categories you want to receive information about:</string>
+    <string name="sf2">Please choose the information level:</string>
+    <string name="sf3">Normal</string>
+    <string name="sf4">Summary</string>
+    <string name="sf5">Overview</string>
+    <string name="sf6">Info Level: Normal</string>
+    <string name="sf7">Info Level: Summary</string>
+    <string name="sf8">Info Level: Overview</string>
+
+    <string-array name="sf6">
+        <item>Architecture</item>
+        <item>History</item>
+        <item>Sports</item>
+        <item>Geography</item>
+    </string-array>
+
+    <string name="sf10">Using this button you can mark all sights as unvisited.</string>
+    <string name="sf11">Are you sure you want to reset the data? All visited POIs will be marked unvisited again.</string>
+    <string name="sf12">Success! Data has been reset!</string>
+
+    <string-array name="sf13">
+        <item>25</item>
+        <item>50</item>
+        <item>100</item>
+        <item>250</item>
+        <item>500</item>
+        <item>1000</item>
+        <item>2500</item>
+        <item>5000</item>
+    </string-array>
+
+    <string name="sf14">Please choose the maximum distance for the automatic guider.</string>
+    <string name="sf15">Reset</string>
+    <string name="sf16">Preferences</string>
+    <string name="sf17">Automatic Highlighting of the active sentence:</string>
+    <string name="sf18">How many notifications should be received:</string>
+    <string name="sf19">Hide visited sights:</string>
+    <string name="sf20">Use an own TTS engine (requires restart):</string>
+    <string-array name="sf21">
+        <item>Unlimited</item>
+        <item>1 per Minute</item>
+        <item>1 per &#189; Hour</item>
+        <item>1 per Hour</item>
+        <item>None</item>
+    </string-array>
+
+    <!-- UpdateFragment Class -->
+    <string name="uf1">You can update your application manually with this button. An internet connection is required.</string>
+    <string name="uf2">Are you sure you want to update the application?</string>
+    <string name="uf3">No internet connection available!</string>
+    <string name="uf4">Do you want to go to WIFI settings?</string>
+
+    <!-- PoiDetailsFragment Class -->
+    <string name="pdf1">There is no further section.</string>
+    <string name="pdf2">There is no earlier section.</string>
+    <string name="pdf3">Location</string>
+
+
+    <!-- MultiSelectionSpinner Class -->
+    <string name="ms1">At least one categorie needs to be chosen. \n\nCategories have been reset!</string>
+
+    <!-- PullDownView -->
+    <string name="pdv1">Pull to refresh</string>
+    <string name="pdv2">Let go to refresh</string>
+    <string name="pdv3">Refreshing...</string>
+
+    <!-- ListViewAdapter -->
+    <string name="lva1">Pull down for update...</string>
+    <string name="lva2">Last updated:</string>
+
+</resources>

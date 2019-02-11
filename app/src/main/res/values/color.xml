@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<resources>
+    <color name="app_blue">#769AC9</color>
+    <color name="default_color">#CCCC</color>
+    <color name="white">#FFFFFF</color>
+    <color name="gray">#ADADAD</color>
+    <color name="black">#000000</color>
+    <color name="black_30">#1e000000</color>
+
+    <integer-array name="gplus_colors">
+        <item>@color/default_color</item>
+        <item>@color/app_blue</item>
+        <item>@color/black</item>
+    </integer-array>
+
+</resources>

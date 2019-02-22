@@ -2,10 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/activatedBackgroundIndicator"
+    android:background="@drawable/drawer_layout"
     android:choiceMode="singleChoice"
-    android:divider="@android:color/white"
-    android:dividerHeight="1dp"
+    android:divider="@android:color/black"
+    android:dividerHeight="0.2dp"
     android:drawSelectorOnTop="true"
     tools:context="at.ac.tuwien.touristguide.NavigationDrawerFragment" />
 

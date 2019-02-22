@@ -12,7 +12,6 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.fragment.app.Fragment;
 import at.ac.tuwien.touristguide.entities.Poi;
 import at.ac.tuwien.touristguide.entities.RowItem;
 import at.ac.tuwien.touristguide.service.LocationService;
@@ -79,10 +79,10 @@ public class NearbyFragment extends Fragment {
         pdialog.show();
         timerDelayRemoveDialog(2000);
 
-        lv_nearby = (ListView) rootView.findViewById(R.id.lv_nearby);
-        tv_nearby = (TextView) rootView.findViewById(R.id.tv_nearby);
+        lv_nearby = rootView.findViewById(R.id.lv_nearby);
+        tv_nearby = rootView.findViewById(R.id.tv_nearby);
 
-        ll_header = (LinearLayout) rootView.findViewById(R.id.ll_listheader);
+        ll_header = rootView.findViewById(R.id.ll_listheader);
         ll_header.setVisibility(View.GONE);
 
         lv_nearby.setOnItemClickListener(new OnItemClickListener() {
@@ -208,6 +208,7 @@ public class NearbyFragment extends Fragment {
 
     /**
      * checks if the location services are enabled
+     *
      * @return true if one of the location services is enabled, false otherwise
      */
     public boolean checkLocationServices() {

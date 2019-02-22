@@ -8,9 +8,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.text.Html;
 import android.text.Layout;
 import android.text.method.ScrollingMovementMethod;
@@ -41,6 +38,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import at.ac.tuwien.touristguide.entities.Poi;
 import at.ac.tuwien.touristguide.entities.Section;
 import at.ac.tuwien.touristguide.service.LocationService;
@@ -143,8 +143,8 @@ public class PoiDetailsFragment extends Fragment implements OnMapReadyCallback {
 
         int infoLevel = DatabaseHandler.getInstance(activity).getLevel();
 
-        scrollView = (ScrollView) rootView.findViewById(R.id.scrollView);
-        ImageView transparentImage = (ImageView) rootView.findViewById(R.id.transparent_image);
+        scrollView = rootView.findViewById(R.id.scrollView);
+        ImageView transparentImage = rootView.findViewById(R.id.transparent_image);
 
         scrollView.requestDisallowInterceptTouchEvent(true);
 
@@ -175,8 +175,8 @@ public class PoiDetailsFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-        TextView tv_poidetails_header = (TextView) rootView.findViewById(R.id.tv_poidetails_header);
-        edittext_content = (EditText) rootView.findViewById(R.id.edittext_content);
+        TextView tv_poidetails_header = rootView.findViewById(R.id.tv_poidetails_header);
+        edittext_content =  rootView.findViewById(R.id.edittext_content);
         edittext_content.setKeyListener(null);
         edittext_content.setHighlightColor(Color.parseColor("#E0F0FF"));
         edittext_content.setPressed(true);
@@ -203,11 +203,11 @@ public class PoiDetailsFragment extends Fragment implements OnMapReadyCallback {
         edittext_content.refreshDrawableState();
         edittext_content.setMovementMethod(new ScrollingMovementMethod());
 
-        play_btn = (Button) rootView.findViewById(R.id.details_play_button);
-        stop_btn = (Button) rootView.findViewById(R.id.details_stop_button);
-        back_btn = (Button) rootView.findViewById(R.id.details_back_button);
-        fwd_btn = (Button) rootView.findViewById(R.id.details_fwd_button);
-        pause_btn = (Button) rootView.findViewById(R.id.details_pause_button);
+        play_btn = rootView.findViewById(R.id.details_play_button);
+        stop_btn = rootView.findViewById(R.id.details_stop_button);
+        back_btn = rootView.findViewById(R.id.details_back_button);
+        fwd_btn = rootView.findViewById(R.id.details_fwd_button);
+        pause_btn = rootView.findViewById(R.id.details_pause_button);
 
         playing = false;
 

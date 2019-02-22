@@ -8,13 +8,13 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
 import at.ac.tuwien.touristguide.tools.RouteHelper;
 import at.ac.tuwien.touristguide.tools.UpdateOperation;
 
@@ -41,10 +41,10 @@ public class UpdateFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_udpate, container, false);
 
-        TextView textView = (TextView) rootView.findViewById(R.id.update_text);
+        TextView textView = rootView.findViewById(R.id.update_text);
         textView.setText(activity.getString(R.string.uf1));
 
-        Button updateBtn = (Button) rootView.findViewById(R.id.update_button);
+        Button updateBtn = rootView.findViewById(R.id.update_button);
         updateBtn.setText("Update");
 
         updateBtn.setOnClickListener(new View.OnClickListener() {

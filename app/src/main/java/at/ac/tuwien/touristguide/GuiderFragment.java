@@ -7,14 +7,16 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
 import java.util.Locale;
+
+import androidx.fragment.app.Fragment;
 import at.ac.tuwien.touristguide.service.LocationService;
 import at.ac.tuwien.touristguide.tools.DatabaseHandler;
 
@@ -42,7 +44,7 @@ public class GuiderFragment extends Fragment implements View.OnTouchListener {
 
         View rootView = inflater.inflate(R.layout.fragment_guider, container, false);
 
-        ImageView iv = (ImageView) rootView.findViewById(R.id.iv_guider);
+        ImageView iv = rootView.findViewById(R.id.iv_guider);
         iv.setOnTouchListener(this);
 
         rootView.setBackgroundColor(Color.WHITE);
@@ -72,7 +74,7 @@ public class GuiderFragment extends Fragment implements View.OnTouchListener {
 
     // found at http://blahti.wordpress.com/2012/06/26/images-with-clickable-areas/
     public int getHotspotColor(int hotspotId, int x, int y) {
-        ImageView img = (ImageView) activity.findViewById(hotspotId);
+        ImageView img = activity.findViewById(hotspotId);
         if (img == null) {
             Log.d("ImageAreasActivity", "Hot spot image not found");
             return 0;

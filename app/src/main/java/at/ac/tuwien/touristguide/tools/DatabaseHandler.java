@@ -5,11 +5,16 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
-import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import at.ac.tuwien.touristguide.R;
+import at.ac.tuwien.touristguide.db.PoiDO;
+import at.ac.tuwien.touristguide.db.SectionDO;
+import at.ac.tuwien.touristguide.db.SettingsDO;
 import at.ac.tuwien.touristguide.entities.Poi;
 import at.ac.tuwien.touristguide.entities.Section;
 
@@ -17,21 +22,18 @@ import at.ac.tuwien.touristguide.entities.Section;
 /**
  * @author Manu Weilharter
  */
-public class DatabaseHandler extends SQLiteAssetHelper {
+public class DatabaseHandler extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 3;
     private static final String TAG = DatabaseHandler.class.getName();
     private static final String DATABASE_NAME = "touristguide.db";
-    private static final String TABLE_POIS = "poi";
-    private static final String TABLE_SECTIONS = "section";
-    private static final String TABLE_SETTINGS = "settings";
+
     private static DatabaseHandler instance;
     private Context context;
 
 
     private DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        setForcedUpgrade();
         this.context = context;
     }
 
@@ -43,77 +45,10 @@ public class DatabaseHandler extends SQLiteAssetHelper {
         return instance;
     }
 
-    /**
-     * Creates all necessary databases
-     * @param db the SQLiteDatabase
-     */
-    public void createTables(SQLiteDatabase db) {
-        String create_poisTable = "CREATE TABLE IF NOT EXISTS " + TABLE_POIS + "("
-                + "id integer PRIMARY KEY, "
-                + "wiki_id TEXT, "
-                + "name TEXT, "
-                + "latitude DOUBLE, "
-                + "longitude DOUBLE, "
-                + "language TEXT, "
-                + "visited INTEGER)";
-
-        String create_sectionsTable = "CREATE TABLE IF NOT EXISTS " + TABLE_SECTIONS + " ("
-                + "id integer primary key, "
-                + "pois_id INTEGER references pois(id), "
-                + "header text, "
-                + "content text, "
-                + "category text)";
-
-        String create_settingsTable = "CREATE TABLE IF NOT EXISTS " + TABLE_SETTINGS + "("
-                + "id INTEGER,"
-                + "level INTEGER,"
-                + "category TEXT,"
-                + "init TEXT, "
-                + "distance INTEGER, "
-                + "update_id TEXT, "
-                + "highlight INTEGER, "
-                + "notify INTEGER, "
-                + "hide INTEGER, "
-                + "tts INTEGER)";
-
-        String index = "CREATE INDEX IF NOT EXISTS lang on " + TABLE_POIS + "(language)";
-        String index2 = "CREATE INDEX IF NOT EXISTS pois_id on " + TABLE_SECTIONS + "(pois_id)";
-
-        try {
-            db.execSQL(create_poisTable);
-            db.execSQL(create_sectionsTable);
-            db.execSQL(create_settingsTable);
-
-            db.execSQL(index);
-            db.execSQL(index2);
-
-            /** Sets the default values for the settings table */
-            db.execSQL("INSERT INTO " + TABLE_SETTINGS + " values(0, 0, '0,1,2,3', 'yes', 250, 'firstid', 1, 0, 0, 0)");
-
-        } catch (Exception e) {
-            Log.e(TAG, e.toString());
-        }
-    }
-
-    /**
-     * Drops all databases
-     */
-    public void dropTables() {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        try {
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_POIS);
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_SECTIONS);
-            db.execSQL("DROP TABLE IF EXISTS " + TABLE_SETTINGS);
-        } catch (Exception e) {
-            Log.e(TAG, e.toString());
-        } finally {
-            db.close();
-        }
-    }
 
     /**
      * Returns a list of all points of interest
+     *
      * @param english true if all english pois should be returned, false if all german pois are requested
      * @return a list of all pois in the given language
      */
@@ -170,7 +105,7 @@ public class DatabaseHandler extends SQLiteAssetHelper {
 
 
     public List<Section> getSectionsForPoi(Poi poi) {
-        String selectQuery = "SELECT  * FROM " + TABLE_SECTIONS + " WHERE pois_id=" + poi.getId();
+        String selectQuery = "SELECT  * FROM " + SectionDO.TABLE_NAME + " WHERE pois_id=" + poi.getId();
         List<Section> sections = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
@@ -204,6 +139,7 @@ public class DatabaseHandler extends SQLiteAssetHelper {
 
     /**
      * Saves the categories chosen from the user to the database
+     *
      * @param categories the chosen categories
      */
     public void saveCategories(String categories) {
@@ -213,7 +149,7 @@ public class DatabaseHandler extends SQLiteAssetHelper {
             ContentValues values = new ContentValues();
             values.put("category", categories);
 
-            db.update(TABLE_SETTINGS, values, "id=0", null);
+            db.update(SettingsDO.TABLE_NAME, values, "id=0", null);
 
         } catch (Exception e) {
             Log.e(TAG, e.toString());
@@ -224,10 +160,11 @@ public class DatabaseHandler extends SQLiteAssetHelper {
 
     /**
      * Returns the categories chosen from the user
+     *
      * @return an int[] representation of the category indices
      */
     public int[] getCategories() {
-        String selectQuery = "SELECT  * FROM " + TABLE_SETTINGS;
+        String selectQuery = "SELECT  * FROM " + SettingsDO.TABLE_NAME;
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
@@ -265,6 +202,7 @@ public class DatabaseHandler extends SQLiteAssetHelper {
     /**
      * Saves the information level chosen from the user to the database
      * 0 - simple, 1 - detailed, 2 - fun
+     *
      * @param level: the chosen information level
      */
     public void saveLevel(int level) {
@@ -274,7 +212,7 @@ public class DatabaseHandler extends SQLiteAssetHelper {
             ContentValues values = new ContentValues();
             values.put("level", level);
 
-            db.update(TABLE_SETTINGS, values, "id=0", null);
+            db.update(SettingsDO.TABLE_NAME, values, "id=0", null);
 
         } catch (Exception e) {
             Log.e(TAG, e.toString());
@@ -285,10 +223,11 @@ public class DatabaseHandler extends SQLiteAssetHelper {
 
     /**
      * Returns the information level chosen from the user
+     *
      * @return the information level
      */
     public int getLevel() {
-        String selectQuery = "SELECT  * FROM " + TABLE_SETTINGS;
+        String selectQuery = "SELECT  * FROM " + SettingsDO.TABLE_NAME;
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
@@ -323,7 +262,7 @@ public class DatabaseHandler extends SQLiteAssetHelper {
             ContentValues values = new ContentValues();
             values.put("init", "no");
 
-            db.update(TABLE_SETTINGS, values, "id=0", null);
+            db.update(SettingsDO.TABLE_NAME, values, "id=0", null);
 
         } catch (Exception e) {
             Log.e(TAG, e.toString());
@@ -334,10 +273,11 @@ public class DatabaseHandler extends SQLiteAssetHelper {
 
     /**
      * Retrieves the information if the app has been used before
+     *
      * @return true if the app has been used before, false otherwise
      */
     public boolean getInit() {
-        String selectQuery = "SELECT  * FROM " + TABLE_SETTINGS;
+        String selectQuery = "SELECT  * FROM " + SettingsDO.TABLE_NAME;
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
@@ -365,6 +305,7 @@ public class DatabaseHandler extends SQLiteAssetHelper {
 
     /**
      * Saves the visited value for a poi to the database
+     *
      * @param wiki_id the poi's Wikipedia id
      * @param visited 0 for unvisited, 1 for visited
      */
@@ -374,7 +315,7 @@ public class DatabaseHandler extends SQLiteAssetHelper {
         try {
             ContentValues values = new ContentValues();
             values.put("visited", visited);
-            db.update(TABLE_POIS, values, "wiki_id=" + wiki_id, null);
+            db.update(PoiDO.TABLE_NAME, values, "wiki_id=" + wiki_id, null);
         } catch (Exception e) {
             Log.e(TAG, e.toString());
         } finally {
@@ -384,6 +325,7 @@ public class DatabaseHandler extends SQLiteAssetHelper {
 
     /**
      * Resets the visited values in the database
+     *
      * @param visited 0 for unvisited, 1 for visited
      */
     public void resetVisited(int visited) {
@@ -392,7 +334,7 @@ public class DatabaseHandler extends SQLiteAssetHelper {
         try {
             ContentValues values = new ContentValues();
             values.put("visited", visited);
-            db.update(TABLE_POIS, values, null, null);
+            db.update(PoiDO.TABLE_NAME, values, null, null);
         } catch (Exception e) {
             Log.e(TAG, e.toString());
         } finally {
@@ -402,10 +344,11 @@ public class DatabaseHandler extends SQLiteAssetHelper {
 
     /**
      * Returns the user-chosen distance value within which the pois should be presented (standard: 250m)
+     *
      * @return the distance
      */
     public int getDistance() {
-        String selectQuery = "SELECT  * FROM " + TABLE_SETTINGS;
+        String selectQuery = "SELECT  * FROM " + SettingsDO.TABLE_NAME;
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
@@ -432,6 +375,7 @@ public class DatabaseHandler extends SQLiteAssetHelper {
 
     /**
      * Saves the user-chosen distance value to the database
+     *
      * @param distance the maximum distance for which pois will be read to the user
      */
     public void setDistance(int distance) {
@@ -441,7 +385,7 @@ public class DatabaseHandler extends SQLiteAssetHelper {
             ContentValues values = new ContentValues();
             values.put("distance", distance);
 
-            db.update(TABLE_SETTINGS, values, "id=0", null);
+            db.update(SettingsDO.TABLE_NAME, values, "id=0", null);
 
         } catch (Exception e) {
             Log.e(TAG, e.toString());
@@ -452,10 +396,11 @@ public class DatabaseHandler extends SQLiteAssetHelper {
 
     /**
      * Returns the setting for the highlight option
+     *
      * @return 1 for enabled, 0 for disabled
      */
     public int getHighlight() {
-        String selectQuery = "SELECT  * FROM " + TABLE_SETTINGS;
+        String selectQuery = "SELECT  * FROM " + SettingsDO.TABLE_NAME;
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
@@ -483,6 +428,7 @@ public class DatabaseHandler extends SQLiteAssetHelper {
 
     /**
      * Sets the settings for the highlight option
+     *
      * @param status 1 for enabled, 0 for disabled
      */
     public void setHighlight(int status) {
@@ -492,7 +438,7 @@ public class DatabaseHandler extends SQLiteAssetHelper {
             ContentValues values = new ContentValues();
             values.put("highlight", status);
 
-            db.update(TABLE_SETTINGS, values, "id=0", null);
+            db.update(SettingsDO.TABLE_NAME, values, "id=0", null);
 
         } catch (Exception e) {
             Log.e(TAG, e.toString());
@@ -503,10 +449,11 @@ public class DatabaseHandler extends SQLiteAssetHelper {
 
     /**
      * Returns the setting for the notify option
+     *
      * @return 1 for enabled, 0 for disabled
      */
     public int getNotify() {
-        String selectQuery = "SELECT  * FROM " + TABLE_SETTINGS;
+        String selectQuery = "SELECT  * FROM " + SettingsDO.TABLE_NAME;
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
@@ -534,6 +481,7 @@ public class DatabaseHandler extends SQLiteAssetHelper {
 
     /**
      * Sets the settings for the notify option
+     *
      * @param status 1 for enabled, 0 for disabled
      */
     public void setNotify(int status) {
@@ -543,7 +491,7 @@ public class DatabaseHandler extends SQLiteAssetHelper {
             ContentValues values = new ContentValues();
             values.put("notify", status);
 
-            db.update(TABLE_SETTINGS, values, "id=0", null);
+            db.update(SettingsDO.TABLE_NAME, values, "id=0", null);
 
         } catch (Exception e) {
             Log.e(TAG, e.toString());
@@ -554,10 +502,11 @@ public class DatabaseHandler extends SQLiteAssetHelper {
 
     /**
      * Returns the setting for the hide option
+     *
      * @return 1 for enabled, 0 for disabled
      */
     public int getHide() {
-        String selectQuery = "SELECT  * FROM " + TABLE_SETTINGS;
+        String selectQuery = "SELECT  * FROM " + SettingsDO.TABLE_NAME;
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
@@ -585,6 +534,7 @@ public class DatabaseHandler extends SQLiteAssetHelper {
 
     /**
      * Sets the settings for the hide option
+     *
      * @param status 1 for enabled, 0 for disabled
      */
     public void setHide(int status) {
@@ -594,7 +544,7 @@ public class DatabaseHandler extends SQLiteAssetHelper {
             ContentValues values = new ContentValues();
             values.put("hide", status);
 
-            db.update(TABLE_SETTINGS, values, "id=0", null);
+            db.update(SettingsDO.TABLE_NAME, values, "id=0", null);
 
         } catch (Exception e) {
             Log.e(TAG, e.toString());
@@ -605,10 +555,11 @@ public class DatabaseHandler extends SQLiteAssetHelper {
 
     /**
      * Returns the setting for the tts usage option
+     *
      * @return 1 for enabled, 0 for disabled
      */
     public int getUseOwnTTS() {
-        String selectQuery = "SELECT  * FROM " + TABLE_SETTINGS;
+        String selectQuery = "SELECT  * FROM " + SettingsDO.TABLE_NAME;
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
@@ -636,6 +587,7 @@ public class DatabaseHandler extends SQLiteAssetHelper {
 
     /**
      * Sets the settings for the tts usage option
+     *
      * @param status 1 for enabled, 0 for disabled
      */
     public void setUseOwnTTS(int status) {
@@ -645,7 +597,7 @@ public class DatabaseHandler extends SQLiteAssetHelper {
             ContentValues values = new ContentValues();
             values.put("tts", status);
 
-            db.update(TABLE_SETTINGS, values, "id=0", null);
+            db.update(SettingsDO.TABLE_NAME, values, "id=0", null);
 
         } catch (Exception e) {
             Log.e(TAG, e.toString());
@@ -660,7 +612,7 @@ public class DatabaseHandler extends SQLiteAssetHelper {
      * @return numPois
      */
     public int getPoiCount(String language) {
-        String selectQuery = "SELECT  count(id) FROM " + TABLE_POIS + " where language LIKE '" + language + "'";
+        String selectQuery = "SELECT  count(id) FROM " + PoiDO.TABLE_NAME + " where language LIKE '" + language + "'";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
@@ -687,6 +639,7 @@ public class DatabaseHandler extends SQLiteAssetHelper {
 
     /**
      * adds pois to the database
+     *
      * @param pois the pois to add
      */
     public void addPois(List<Poi> pois) {
@@ -705,7 +658,7 @@ public class DatabaseHandler extends SQLiteAssetHelper {
                 values.put("language", poi.getLanguage());
                 values.put("visited", 0);
 
-                db.insert(TABLE_POIS, null, values);
+                db.insert(PoiDO.TABLE_NAME, null, values);
 
                 if (poi.getSections() != null) {
                     for (Section sec : poi.getSections()) {
@@ -716,7 +669,7 @@ public class DatabaseHandler extends SQLiteAssetHelper {
                         values2.put("content", sec.getContent());
                         values2.put("category", sec.getCategory());
 
-                        db.insert(TABLE_SECTIONS, null, values2);
+                        db.insert(SectionDO.TABLE_NAME, null, values2);
                     }
                 }
             }
@@ -764,6 +717,7 @@ public class DatabaseHandler extends SQLiteAssetHelper {
 
     /**
      * returns the POI for the given Wikipedia id
+     *
      * @param wikipediaId the id of the Wikipedia page
      * @return the corresponding POI
      */
@@ -818,4 +772,18 @@ public class DatabaseHandler extends SQLiteAssetHelper {
         return poi;
     }
 
+    @Override
+    public void onCreate(SQLiteDatabase db) {
+        db.execSQL(PoiDO.SQL_CREATE);
+        db.execSQL(SectionDO.SQL_CREATE);
+        db.execSQL(SettingsDO.SQL_CREATE);
+
+        db.execSQL(PoiDO.SQL_CREATE_INDEX);
+        db.execSQL(SectionDO.SQL_CREATE_INDEX);
+    }
+
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+    }
 }

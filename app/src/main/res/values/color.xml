@@ -8,6 +8,7 @@
     <color name="gray">#ADADAD</color>
     <color name="black">#000000</color>
     <color name="black_30">#1e000000</color>
+    <color name="atg_drawer">#ffffff</color>
 
     <integer-array name="gplus_colors">
         <item>@color/default_color</item>

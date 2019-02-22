@@ -1,13 +1,11 @@
 package at.ac.tuwien.touristguide;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +20,11 @@ import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.fragment.app.Fragment;
 import at.ac.tuwien.touristguide.tools.DatabaseHandler;
 import at.ac.tuwien.touristguide.tools.MultiSelectionSpinner;
 import at.ac.tuwien.touristguide.tools.PoiHolder;
@@ -45,7 +46,6 @@ public class SettingsFragment extends Fragment {
 
     private String[] items;
 
-    @SuppressLint("ShowToast")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -54,10 +54,10 @@ public class SettingsFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        TextView tvCategories = (TextView) rootView.findViewById(R.id.tv_settingsCategories);
+        TextView tvCategories = rootView.findViewById(R.id.tv_settingsCategories);
         tvCategories.setText(activity.getString(R.string.sf1));
 
-        spinner_categories = (MultiSelectionSpinner) rootView.findViewById(R.id.spinner_categories);
+        spinner_categories = rootView.findViewById(R.id.spinner_categories);
         spinner_categories.setContext(activity);
         initializeCategories();
 
@@ -65,28 +65,28 @@ public class SettingsFragment extends Fragment {
 
         spinner_categories.setSelection(DatabaseHandler.getInstance(activity).getCategories());
 
-        TextView tvInfoLevel = (TextView) rootView.findViewById(R.id.tv_infoLevel);
+        TextView tvInfoLevel = rootView.findViewById(R.id.tv_infoLevel);
         tvInfoLevel.setText(activity.getString(R.string.sf2));
 
-        SeekBar sbInfoLevel = (SeekBar) rootView.findViewById(R.id.seekBar1);
+        SeekBar sbInfoLevel = rootView.findViewById(R.id.seekBar1);
         sbInfoLevel.setOnSeekBarChangeListener(sbcl);
         sbInfoLevel.setProgress(DatabaseHandler.getInstance(activity).getLevel());
 
-        TextView sbMin = (TextView) rootView.findViewById(R.id.tv_sbMin);
+        TextView sbMin = rootView.findViewById(R.id.tv_sbMin);
         sbMin.setText(activity.getString(R.string.sf3));
 
-        TextView sbMedium = (TextView) rootView.findViewById(R.id.tv_sbMedium);
+        TextView sbMedium = rootView.findViewById(R.id.tv_sbMedium);
         sbMedium.setText(activity.getString(R.string.sf4));
 
-        TextView sbMax = (TextView) rootView.findViewById(R.id.tv_sbMax);
+        TextView sbMax = rootView.findViewById(R.id.tv_sbMax);
         sbMax.setText(activity.getString(R.string.sf5));
 
         initSwitches(rootView);
 
-        TextView tvReset = (TextView) rootView.findViewById(R.id.tv_settingsReset);
+        TextView tvReset = rootView.findViewById(R.id.tv_settingsReset);
         tvReset.setText(activity.getString(R.string.sf10));
 
-        Button resetBtn = (Button) rootView.findViewById(R.id.reset_btn);
+        Button resetBtn = rootView.findViewById(R.id.reset_btn);
         resetBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -116,10 +116,10 @@ public class SettingsFragment extends Fragment {
 
         toast = Toast.makeText(activity, "", Toast.LENGTH_SHORT);
 
-        TextView tvDistance = (TextView) rootView.findViewById(R.id.tv_settingsDistance);
+        TextView tvDistance = rootView.findViewById(R.id.tv_settingsDistance);
         tvDistance.setText(activity.getString(R.string.sf14));
 
-        Spinner spinner_distance = (Spinner) rootView.findViewById(R.id.spinner_settingsDistance);
+        Spinner spinner_distance = rootView.findViewById(R.id.spinner_settingsDistance);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(activity, R.array.sf13, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_distance.setAdapter(adapter);
@@ -127,8 +127,7 @@ public class SettingsFragment extends Fragment {
         spinner_distance.setOnItemSelectedListener(new OnItemSelectedListener() {
 
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view,
-                                       int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 DatabaseHandler.getInstance(activity).setDistance(Integer.parseInt(parent.getItemAtPosition(position).toString()));
             }
 
@@ -144,10 +143,10 @@ public class SettingsFragment extends Fragment {
     }
 
     private void initSwitches(View rootView) {
-        TextView tvHighlight = (TextView) rootView.findViewById(R.id.tv_highlight);
+        TextView tvHighlight = rootView.findViewById(R.id.tv_highlight);
         tvHighlight.setText(activity.getString(R.string.sf17));
 
-        Switch switchBtn = (Switch) rootView.findViewById(R.id.switchBtn);
+        Switch switchBtn = rootView.findViewById(R.id.switchBtn);
         switchBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -158,10 +157,10 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        TextView tvNoti = (TextView) rootView.findViewById(R.id.tv_noti);
+        TextView tvNoti = rootView.findViewById(R.id.tv_noti);
         tvNoti.setText(activity.getString(R.string.sf18));
 
-        Spinner spinner_noti = (Spinner) rootView.findViewById(R.id.spinner_noti);
+        Spinner spinner_noti = rootView.findViewById(R.id.spinner_noti);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item, items);
 
@@ -180,10 +179,10 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        TextView tvHide = (TextView) rootView.findViewById(R.id.tv_hide);
+        TextView tvHide = rootView.findViewById(R.id.tv_hide);
         tvHide.setText(activity.getString(R.string.sf19));
 
-        Switch switchBtn3 = (Switch) rootView.findViewById(R.id.switchBtn3);
+        Switch switchBtn3 = rootView.findViewById(R.id.switchBtn3);
         switchBtn3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -194,10 +193,10 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        TextView tvTTS = (TextView) rootView.findViewById(R.id.tv_tts);
+        TextView tvTTS = rootView.findViewById(R.id.tv_tts);
         tvTTS.setText(activity.getString(R.string.sf20));
 
-        Switch switchBtn4 = (Switch) rootView.findViewById(R.id.switchBtn4);
+        Switch switchBtn4 = rootView.findViewById(R.id.switchBtn4);
         switchBtn4.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {

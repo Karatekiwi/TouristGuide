@@ -38,8 +38,8 @@ public class CustomListViewAdapterNearby extends ArrayAdapter<RowItem> {
         if (position == 0) {
             convertView = mInflater.inflate(R.layout.listview_header, null);
             ViewHolderHeader holder2 = new ViewHolderHeader();
-            holder2.txtTitle = (TextView) convertView.findViewById(R.id.tv_listheader);
-            holder2.txtTitle2 = (TextView) convertView.findViewById(R.id.tv_listheader2);
+            holder2.txtTitle = convertView.findViewById(R.id.tv_listheader);
+            holder2.txtTitle2 = convertView.findViewById(R.id.tv_listheader2);
             SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
             holder2.txtTitle.setText(context.getResources().getString(R.string.lva1));
             holder2.txtTitle2.setText(context.getResources().getString(R.string.lva2) + " " + sdf.format(new Date()));
@@ -48,10 +48,10 @@ public class CustomListViewAdapterNearby extends ArrayAdapter<RowItem> {
             RowItem rowItem = getItem(position);
             convertView = mInflater.inflate(R.layout.listview_lines, null);
             ViewHolder holder = new ViewHolder();
-            holder.txtDesc = (TextView) convertView.findViewById(R.id.line_b);
-            holder.txtTitle = (TextView) convertView.findViewById(R.id.line_a);
-            holder.imageView = (ImageView) convertView.findViewById(R.id.icon);
-            holder.imageText = (TextView) convertView.findViewById(R.id.icon_text);
+            holder.txtDesc = convertView.findViewById(R.id.line_b);
+            holder.txtTitle = convertView.findViewById(R.id.line_a);
+            holder.imageView = convertView.findViewById(R.id.icon);
+            holder.imageText = convertView.findViewById(R.id.icon_text);
             convertView.setTag(holder);
 
             // List Header

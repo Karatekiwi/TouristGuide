@@ -73,7 +73,6 @@ import at.ac.tuwien.touristguide.tools.RouteHelper;
  * @author Manu Weilharter
  * GuiderDetails: positioning is included in this frame, for it to be able to adapt to the user's movements
  */
-@SuppressWarnings("deprecation")
 public class GuiderDetailsFragment extends Fragment implements OnMapReadyCallback {
 
     private static final String TAG = GuiderDetailsFragment.class.getName();
@@ -518,18 +517,6 @@ public class GuiderDetailsFragment extends Fragment implements OnMapReadyCallbac
         return true;
     }
 
-
-    /**
-     * checks if the location services are enabled
-     *
-     * @return true if they are enabled, false otherwise
-
-    public boolean locationServicesEnabled() {
-    LocationManager lm = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
-    return lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
-    || lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-    }
-     */
 
     /**
      * initializes the text-to-speech engine

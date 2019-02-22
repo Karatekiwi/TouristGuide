@@ -21,7 +21,7 @@ public class UpdateOperation extends AsyncTask<String, Void, Void> {
 
     public UpdateOperation(Activity activity) {
         this.activity = activity;
-        this.output = (TextView) activity.findViewById(R.id.update_text2);
+        this.output = activity.findViewById(R.id.update_text2);
 
         dialog = new ProgressDialog(activity);
         dialog.setCancelable(false);

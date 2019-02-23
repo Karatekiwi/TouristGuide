@@ -2,18 +2,9 @@
 
 
 <resources>
-    <color name="app_blue">#769AC9</color>
-    <color name="default_color">#CCCC</color>
+    <color name="app_primary">#C0CA33</color>
+    <color name="app_secondary">#F8BBD0</color>
+    <color name="light_gray">#EEEDED</color>
     <color name="white">#FFFFFF</color>
-    <color name="gray">#ADADAD</color>
     <color name="black">#000000</color>
-    <color name="black_30">#1e000000</color>
-    <color name="atg_drawer">#ffffff</color>
-
-    <integer-array name="gplus_colors">
-        <item>@color/default_color</item>
-        <item>@color/app_blue</item>
-        <item>@color/black</item>
-    </integer-array>
-
 </resources>

@@ -19,7 +19,10 @@
     <string name="navigation_drawer_open">Navigation Drawer öffnen</string>
     <!-- Navigation Drawer close -->
     <string name="navigation_drawer_close">Navigation Drawer schließen</string>
+
     <!-- Menu click -->
+    <string name="helper">Hilfe</string>
+
     <!-- Menu click 2 -->
     <string name="refresh">Aktualisieren</string>
 

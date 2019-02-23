@@ -242,7 +242,6 @@ public class NearbyFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        System.out.println("wargekjer");
         switch (requestCode) {
             case RC_ACCESS_LOCATION: {
                 if (permissionGranted(grantResults)) {

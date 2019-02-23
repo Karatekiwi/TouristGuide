@@ -44,9 +44,6 @@ public class MainActivity extends AppCompatActivity implements
         mTitle = getTitle();
 
         navigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
-        ActionBar actionBar = getSupportActionBar();
-
-        actionBar.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#769AC9")));
 
         exit = true;
     }

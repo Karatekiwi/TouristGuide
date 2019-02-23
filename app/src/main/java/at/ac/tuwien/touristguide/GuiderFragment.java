@@ -17,8 +17,7 @@ import android.widget.ImageView;
 import java.util.Locale;
 
 import androidx.fragment.app.Fragment;
-import at.ac.tuwien.touristguide.service.LocationService;
-import at.ac.tuwien.touristguide.tools.DatabaseHandler;
+import at.ac.tuwien.touristguide.db.DatabaseHandler;
 
 
 /**
@@ -29,7 +28,6 @@ public class GuiderFragment extends Fragment implements View.OnTouchListener {
 
     private Activity activity;
     private NavigationDrawerFragment navigationDrawerFragment;
-    private LocationService locationService;
 
 
     @Override
@@ -109,7 +107,6 @@ public class GuiderFragment extends Fragment implements View.OnTouchListener {
 
         GuiderDetailsFragment fragment = new GuiderDetailsFragment();
         navigationDrawerFragment.setDetails(true);
-        fragment.setLocationService(locationService);
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, fragment).addToBackStack("overview").commitAllowingStateLoss();
 
@@ -136,10 +133,6 @@ public class GuiderFragment extends Fragment implements View.OnTouchListener {
 
     public void setNavigationDrawerFragment(NavigationDrawerFragment navigationDrawerFragment) {
         this.navigationDrawerFragment = navigationDrawerFragment;
-    }
-
-    public void setLocationService(LocationService locationService) {
-        this.locationService = locationService;
     }
 
 }

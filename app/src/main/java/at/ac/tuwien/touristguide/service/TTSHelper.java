@@ -9,7 +9,7 @@ import android.speech.tts.TextToSpeech.EngineInfo;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.util.Log;
 import java.util.Locale;
-import at.ac.tuwien.touristguide.tools.DatabaseHandler;
+import at.ac.tuwien.touristguide.db.DatabaseHandler;
 
 
 /**

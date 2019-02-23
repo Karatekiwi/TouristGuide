@@ -1,26 +1,25 @@
 package at.ac.tuwien.touristguide;
 
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.jsoup.Jsoup;
 
@@ -29,34 +28,50 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import at.ac.tuwien.touristguide.db.DatabaseHandler;
 import at.ac.tuwien.touristguide.entities.Poi;
 import at.ac.tuwien.touristguide.entities.RowItem;
-import at.ac.tuwien.touristguide.service.LocationService;
 import at.ac.tuwien.touristguide.tools.CustomListViewAdapterNearby;
-import at.ac.tuwien.touristguide.tools.DatabaseHandler;
 import at.ac.tuwien.touristguide.tools.PoiHolder;
+import at.ac.tuwien.touristguide.utils.LanguageUtils;
 
 
 /**
  * @author Manu Weilharter
  * Shows the nearest pois
  */
-public class NearbyFragment extends Fragment {
+public class NearbyFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final String PERSISTENT_VARIABLE_BUNDLE_KEY = "persistentVariable";
+    private static final int RC_ACCESS_LOCATION = 1;
+
+    private static final String[] PERMISSIONS = {
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION
+    };
+
     private Activity activity;
-    private Context context;
+
     private Location location;
+
     private ListView lv_nearby;
     private TextView tv_nearby;
+
     private int position = -1;
     private int top = -1;
-    private LinearLayout ll_header;
-    private ProgressDialog pdialog;
-    private List<Poi> nearestPois;
     private boolean viewDetails = false;
-    private NavigationDrawerFragment navigationDrawerFragment;
+
+    private List<Poi> nearestPois;
+
+    private NavigationDrawerFragment navFragment;
+    private FusedLocationProviderClient locationClient;
+    private SwipeRefreshLayout swipeLayout;
+
 
     public NearbyFragment() {
         setArguments(new Bundle());
@@ -66,34 +81,64 @@ public class NearbyFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.activity = activity;
-        context = activity.getApplicationContext();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_nearby, container, false);
-        pdialog = new ProgressDialog(activity);
-        pdialog.setCancelable(true);
-        pdialog.setMessage(activity.getString(R.string.nf4));
-        pdialog.show();
-        timerDelayRemoveDialog(2000);
+        rootView.setBackgroundColor(Color.WHITE);
 
-        lv_nearby = rootView.findViewById(R.id.lv_nearby);
+        restoreFragment();
+
+        initTextView(rootView);
+        initListView(rootView);
+        initSwipeLayout(rootView);
+        initLocationClient();
+        initLocationPermissions();
+
+        return rootView;
+    }
+
+    private void initLocationClient() {
+        locationClient = LocationServices.getFusedLocationProviderClient(activity);
+    }
+
+    private void restoreFragment() {
+        Bundle mySavedInstanceState = getArguments();
+        String persistentVariable = mySavedInstanceState.getString(PERSISTENT_VARIABLE_BUNDLE_KEY);
+
+        // restore fragment
+        if (persistentVariable != null) {
+            position = Integer.parseInt(persistentVariable.split(",")[1]);
+            top = Integer.parseInt(persistentVariable.split(",")[2]);
+        }
+    }
+
+    private void initTextView(View rootView) {
         tv_nearby = rootView.findViewById(R.id.tv_nearby);
+    }
 
-        ll_header = rootView.findViewById(R.id.ll_listheader);
-        ll_header.setVisibility(View.GONE);
+    private void initSwipeLayout(View rootView) {
+        swipeLayout = rootView.findViewById(R.id.srl_locations);
+        swipeLayout.setOnRefreshListener(this);
+        swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+    }
 
+    private void initListView(View rootView) {
+        lv_nearby = rootView.findViewById(R.id.lv_nearby);
         lv_nearby.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 PoiDetailsFragment fragment = new PoiDetailsFragment();
-                navigationDrawerFragment.setDetails(true);
+                navFragment.setDetails(true);
 
                 int index = lv_nearby.getFirstVisiblePosition();
-                View v = lv_nearby.getChildAt(0);
-                int top = (v == null) ? 0 : v.getTop();
+                View childView = lv_nearby.getChildAt(0);
+                int top = (childView == null) ? 0 : childView.getTop();
                 savePosition(index, top);
 
                 fragment.setPoi(nearestPois.get(position));
@@ -103,19 +148,21 @@ public class NearbyFragment extends Fragment {
                 ((MainActivity) activity).setExit(false);
             }
         });
+    }
 
-        Bundle mySavedInstanceState = getArguments();
-        String persistentVariable = mySavedInstanceState.getString(PERSISTENT_VARIABLE_BUNDLE_KEY);
 
-        // restore fragment
-        if (persistentVariable != null) {
-            position = Integer.parseInt(persistentVariable.split(",")[1]);
-            top = Integer.parseInt(persistentVariable.split(",")[2]);
-        }
-
-        rootView.setBackgroundColor(Color.WHITE);
-
-        return rootView;
+    @SuppressLint("MissingPermission")
+    private void updateLocation() {
+        locationClient.getLastLocation()
+                .addOnSuccessListener(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            setLocation(location);
+                            startUp();
+                        }
+                    }
+                });
 
     }
 
@@ -125,25 +172,14 @@ public class NearbyFragment extends Fragment {
     public void startUp() {
         viewDetails = false;
 
-        String language;
-
-        if (Locale.getDefault().getLanguage().equals("de")) {
-            language = "de";
-        } else {
-            language = "en";
-        }
+        String language = LanguageUtils.getLanguage();
 
         if (DatabaseHandler.getInstance(activity).getPoiCount(language) == 0) {
-            pdialog.dismiss();
             tv_nearby.setText(activity.getString(R.string.nf1));
-            ll_header.setVisibility(View.VISIBLE);
             return;
         }
 
-        if (checkLocationServices()) {
-            location = LocationService.getLoc();
-            new CalculateNearbyPois().execute();
-        }
+        new CalculateNearbyPois().execute();
     }
 
 
@@ -168,30 +204,25 @@ public class NearbyFragment extends Fragment {
         List<RowItem> rowItems = new ArrayList<>();
 
         if (nearestPois == null) {
-            pdialog.dismiss();
-            tv_nearby.setText(activity.getString(R.string.nf5));
-            ll_header.setVisibility(View.VISIBLE);
             return;
         }
 
         tv_nearby.setVisibility(View.GONE);
 
-        for (int i = 0; i < 25; i++) {
+        for (int index = 0; index < 25; index++) {
             try {
-                RowItem item = new RowItem(R.drawable.placeholder, nearestPois.get(i).getName(),
-                        Jsoup.parse(DatabaseHandler.getInstance(context).getSectionsForPoi(nearestPois.get(i)).get(0).getContent()).text(),
-                        (int) Math.round(nearestPois.get(i).getDistance()), nearestPois.get(i).getVisited());
+                RowItem item = new RowItem(R.drawable.placeholder, nearestPois.get(index).getName(),
+                        Jsoup.parse(DatabaseHandler.getInstance(activity).getSectionsForPoi(nearestPois.get(index)).get(0).getContent()).text(),
+                        (int) Math.round(nearestPois.get(index).getDistance()), nearestPois.get(index).getVisited());
 
                 rowItems.add(item);
             } catch (Exception e) {
-                Log.e("NearbyFragment", e.toString());
+                // noop
             }
         }
 
-        CustomListViewAdapterNearby adapter = new CustomListViewAdapterNearby(context, R.layout.listview_lines, rowItems);
+        CustomListViewAdapterNearby adapter = new CustomListViewAdapterNearby(activity, R.layout.listview_lines, rowItems);
         lv_nearby.setAdapter(adapter);
-
-        pdialog.dismiss();
 
         if (position != -1) {
             lv_nearby.setSelectionFromTop(position, top);
@@ -201,65 +232,61 @@ public class NearbyFragment extends Fragment {
 
     public void initList(List<Poi> list) {
         this.nearestPois = list;
-        ll_header.setVisibility(View.GONE);
         getNearPois(nearestPois);
     }
 
 
-    /**
-     * checks if the location services are enabled
-     *
-     * @return true if one of the location services is enabled, false otherwise
-     */
-    public boolean checkLocationServices() {
-        if (!LocationService.isProviderEnabled()) {
-            ll_header.setVisibility(View.VISIBLE);
-            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-            builder
-                    .setTitle(activity.getString(R.string.nf2))
-                    .setMessage(activity.getString(R.string.nf3))
-                    .setCancelable(false);
+    private void setLocation(Location location) {
+        this.location = location;
+    }
 
-            builder.setNegativeButton(activity.getString(R.string.ma4), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface di, int id) {
-                    pdialog.cancel();
-                    tv_nearby.setText(context.getString(R.string.gdf13));
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        System.out.println("wargekjer");
+        switch (requestCode) {
+            case RC_ACCESS_LOCATION: {
+                if (permissionGranted(grantResults)) {
+                    updateLocation();
+                } else {
+                    tv_nearby.setText(activity.getString(R.string.nf4));
+                    swipeLayout.setRefreshing(false);
                 }
-            });
 
-            builder.setPositiveButton(activity.getString(R.string.ma5), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    pdialog.cancel();
-                    Intent gpsOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(gpsOptionsIntent);
+                return;
+            }
+        }
+    }
 
-                    new Handler().postDelayed(new Runnable() {
-                        public void run() {
-                            tv_nearby.setText(activity.getString(R.string.nf5));
-                        }
-                    }, 1000);
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
-                }
-            });
-
-            AlertDialog alert = builder.create();
-            alert.show();
-            return false;
+    private void initLocationPermissions() {
+        List<String> permissionsToRequest = new ArrayList<>();
+        for (String permission : PERMISSIONS) {
+            int granted = ContextCompat.checkSelfPermission(activity, permission);
+            if (granted != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(permission);
+            }
         }
 
-        return true;
+        if (permissionsToRequest.isEmpty()) {
+            updateLocation();
+            return;
+        }
+
+        String[] toRequest = permissionsToRequest.toArray(new String[permissionsToRequest.size()]);
+        requestPermissions(toRequest, RC_ACCESS_LOCATION);
     }
 
-    public void timerDelayRemoveDialog(long time) {
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                startUp();
-            }
-        }, time);
+    private boolean permissionGranted(int[] grantResults) {
+        return grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
     }
 
-    public void setNavigationDrawerFragment(NavigationDrawerFragment navigationDrawerFragment) {
-        this.navigationDrawerFragment = navigationDrawerFragment;
+
+    public void setNavFragment(NavigationDrawerFragment navFragment) {
+        this.navFragment = navFragment;
     }
 
     @Override
@@ -277,6 +304,12 @@ public class NearbyFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+    @Override
+    public void onRefresh() {
+        initLocationPermissions();
+        updateLocation();
     }
 
 
@@ -302,6 +335,7 @@ public class NearbyFragment extends Fragment {
         @Override
         protected void onPostExecute(List<Poi> str) {
             initList(str);
+            swipeLayout.setRefreshing(false);
         }
     }
 

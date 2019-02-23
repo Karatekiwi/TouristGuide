@@ -43,9 +43,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import at.ac.tuwien.touristguide.entities.Poi;
 import at.ac.tuwien.touristguide.entities.Section;
-import at.ac.tuwien.touristguide.service.LocationService;
 import at.ac.tuwien.touristguide.service.TTSHelper;
-import at.ac.tuwien.touristguide.tools.DatabaseHandler;
+import at.ac.tuwien.touristguide.db.DatabaseHandler;
 import at.ac.tuwien.touristguide.tools.HeightHelper;
 import at.ac.tuwien.touristguide.tools.NLPHelper;
 import at.ac.tuwien.touristguide.tools.PoiHolder;
@@ -271,7 +270,7 @@ public class PoiDetailsFragment extends Fragment implements OnMapReadyCallback {
                 .title(poi.getName()));
 
 
-        Location loc = LocationService.getLoc();
+        Location loc = null;
 
         if (loc != null) {
             if (RouteHelper.isOnline(activity)) {

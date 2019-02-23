@@ -30,4 +30,7 @@ public class SettingsDO {
             + COLUMN_HIDE + " INTEGER, "
             + COLUMN_TTS + " INTEGER)";
 
+    public static final String SQL_DEFAULT_SETTINGS = "INSERT INTO " + SettingsDO.TABLE_NAME +
+            " values(0, 0, '0,1,2,3', 'yes', 250, 'firstid', 1, 0, 0, 0)";
+
 }

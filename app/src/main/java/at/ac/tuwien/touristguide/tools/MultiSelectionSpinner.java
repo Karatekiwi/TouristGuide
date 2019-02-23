@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import at.ac.tuwien.touristguide.R;
+import at.ac.tuwien.touristguide.db.DatabaseHandler;
 
 
 /**

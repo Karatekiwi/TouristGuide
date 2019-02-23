@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
+import at.ac.tuwien.touristguide.db.DatabaseHandler;
 import at.ac.tuwien.touristguide.entities.Poi;
 
 

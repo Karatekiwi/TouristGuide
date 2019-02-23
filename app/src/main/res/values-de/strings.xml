@@ -3,6 +3,7 @@
 
     <!-- App Name -->
     <string name="app_name">ATG</string>
+    <string name="API_KEY">AIzaSyBPCvURWeRNJL6-WaSpBnYoy0Ua0QAVpjE</string>
 
     <!-- Nav Drawer Menu Items -->
     <string-array name="nav_drawer_items">
@@ -19,7 +20,6 @@
     <!-- Navigation Drawer close -->
     <string name="navigation_drawer_close">Navigation Drawer schließen</string>
     <!-- Menu click -->
-    <string name="helper">Hilfe</string>
     <!-- Menu click 2 -->
     <string name="refresh">Aktualisieren</string>
 
@@ -105,10 +105,8 @@
 
     <!-- NearbyFragment Class -->
     <string name="nf1">Keine Sehenswürdigkeiten gefunden. \nBitte die Einstellungen überprüfen und über den Menüpunkt Update eine Aktualisierung durchführen.</string>
-    <string name="nf2">Standort konnte nicht ermittelt werden.</string>
     <string name="nf3">Möchten Sie die Einstellungen öffnen um die Standortdienste zu aktivieren?</string>
-    <string name="nf4">Sehenswürdigkeiten in der Umgebung werden ermittelt&#8230;</string>
-    <string name="nf5">Aktueller Standort konnte leider noch nicht ermittelt werden. Bitte für bessere Genauigkeit die Verwendung von GPS und Drahtlosnetzwerken in den Standortservice Einstellungen aktivieren.</string>
+    <string name="nf4">Um die umliegenden Sehenswürdigkeiten anzuzeigen, bitte den Standortzugriff für diese App aktivieren.</string>
 
     <!-- SettingsFragment Class -->
     <string name="sf1">Bitte wählen Sie die Kategorien über die Sie Informationen erhalten möchten:</string>

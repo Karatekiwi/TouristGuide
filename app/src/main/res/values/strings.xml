@@ -3,6 +3,7 @@
 
     <!-- App Name -->
     <string name="app_name">ATG</string>
+    <string name="API_KEY">AIzaSyBPCvURWeRNJL6-WaSpBnYoy0Ua0QAVpjE</string>
 
     <!-- Nav Drawer Menu Items -->
     <string-array name="nav_drawer_items">
@@ -105,10 +106,9 @@
 
     <!-- NearbyFragment Class -->
     <string name="nf1">No sights found. \nPlease check your settings and use the menu item update to obtain the newest data.</string>
-    <string name="nf2">Could not determine your location.</string>
     <string name="nf3">Do you want to go to the settings to activate the location services?</string>
-    <string name="nf4">Nearby sights are being located&#8230;</string>
-    <string name="nf5">Current location could not yet be determined. Please activate the usage of GPS and Wireless Networks in the Location Service Settings for higher accuracy.</string>
+    <string name="nf4">To view the surrounding sights - please agree to the location request.</string>
+
 
     <!-- SettingsFragment Class -->
     <string name="sf1">Please choose the categories you want to receive information about:</string>
@@ -180,5 +180,6 @@
     <!-- ListViewAdapter -->
     <string name="lva1">Pull down for update...</string>
     <string name="lva2">Last updated:</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>

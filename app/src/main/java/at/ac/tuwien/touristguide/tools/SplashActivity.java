@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
 import at.ac.tuwien.touristguide.MainActivity;
 import at.ac.tuwien.touristguide.R;
-import at.ac.tuwien.touristguide.service.LocationService;
 import at.ac.tuwien.touristguide.service.TTSHelper;
 
 
@@ -37,7 +37,6 @@ public class SplashActivity extends Activity {
 
         new PoiHolder(this).startUp(getApplicationContext());
 
-        startService(new Intent(this, LocationService.class));
         startService(new Intent(this, TTSHelper.class));
 
         mHandler.postDelayed(mRunnable, SPLASH_TIME_OUT);

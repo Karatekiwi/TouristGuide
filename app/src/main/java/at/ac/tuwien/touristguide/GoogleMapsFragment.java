@@ -3,23 +3,18 @@ package at.ac.tuwien.touristguide;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
@@ -31,6 +26,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
@@ -42,9 +38,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import at.ac.tuwien.touristguide.entities.Poi;
 import at.ac.tuwien.touristguide.entities.PoiMarker;
-import at.ac.tuwien.touristguide.service.LocationService;
 import at.ac.tuwien.touristguide.tools.PoiHolder;
 import at.ac.tuwien.touristguide.tools.PoiRenderer;
+
+import static androidx.core.content.PermissionChecker.checkSelfPermission;
 
 
 /**
@@ -53,21 +50,22 @@ import at.ac.tuwien.touristguide.tools.PoiRenderer;
  */
 public class GoogleMapsFragment extends Fragment implements OnInfoWindowClickListener, OnMarkerClickListener, OnMapReadyCallback {
 
+    private static final int PERMISSIONS_ACCESS_LOCATION = 25;
     private GoogleMap googleMap;
     private SupportMapFragment mapFrag;
     private Context context;
     private Activity activity;
-    private ProgressDialog dialog;
 
     private List<Poi> allPois;
 
-    private boolean firstsetup = true;
     private ClusterManager<PoiMarker> mClusterManager;
     private Poi clickedPoi;
     private float zoomFactor = 15;
 
     private LatLngBounds bounds;
     private Marker lastOpened = null;
+
+    private FusedLocationProviderClient locationClient;
 
 
     @Override
@@ -81,68 +79,22 @@ public class GoogleMapsFragment extends Fragment implements OnInfoWindowClickLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        locationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
         View rootView = inflater.inflate(R.layout.fragment_gmaps, container, false);
-
-        if (firstsetup) {
-            dialog = new ProgressDialog(activity);
-            dialog.setCancelable(false);
-            dialog.setMessage(activity.getString(R.string.gmf2));
-            dialog.show();
-            timerDelayRemoveDialog(4500);
-        }
-
         rootView.setBackgroundColor(Color.WHITE);
-
-        return rootView;
-    }
-
-
-    public void timerDelayRemoveDialog(long time) {
-        new Handler().postDelayed(new Runnable() {
-            public void run() {
-                startUp();
-            }
-        }, time);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
 
         FragmentManager fm = getChildFragmentManager();
         mapFrag = (SupportMapFragment) fm.findFragmentById(R.id.map);
         mapFrag = SupportMapFragment.newInstance();
         fm.beginTransaction().replace(R.id.map, mapFrag).commit();
 
+        startUp();
+
+        return rootView;
     }
 
-
     public void startUp() {
-        if (!checkLocationServices()) {
-            Builder builder = new Builder(activity);
-
-            builder.setNegativeButton(activity.getString(R.string.ma4), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-
-                }
-            });
-            builder.setPositiveButton(activity.getString(R.string.ma5), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                }
-            });
-
-            builder.setTitle(activity.getString(R.string.nf2));
-            builder.setMessage(activity.getString(R.string.gmf3));
-
-            AlertDialog alertDialog = builder.create();
-            alertDialog.show();
-        }
-
-
         if (Locale.getDefault().getLanguage().equals("de")) {
             allPois = PoiHolder.getPois_de();
         } else {
@@ -152,37 +104,32 @@ public class GoogleMapsFragment extends Fragment implements OnInfoWindowClickLis
         mapFrag.getMapAsync(this);
     }
 
-    private void setLocationEnabled(boolean enabled) {
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+    private void requestPermission() {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             return;
         }
 
-        googleMap.setMyLocationEnabled(enabled);
+        ActivityCompat.requestPermissions(getActivity(),
+                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                PERMISSIONS_ACCESS_LOCATION);
+
     }
 
 
-    /**
-     * sets up the google map, this includes positioning of the camera and enabling the current location
-     */
     private void setUpMap() {
-        Location currentLoc = LocationService.getLoc();
-        Location mapLoc = googleMap.getMyLocation();
-
-        if (firstsetup) {
-            if (currentLoc != null) {
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(currentLoc.getLatitude(), currentLoc.getLongitude()), zoomFactor));
-            } else if (mapLoc != null) {
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mapLoc.getLatitude(), mapLoc.getLongitude()), zoomFactor));
-            } else {
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(48.209943, 16.370257), zoomFactor));
-            }
-
-            dialog.dismiss();
-        } else if (clickedPoi != null) {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(clickedPoi.getLatitude(), clickedPoi.getLongitude()), zoomFactor));
+        if (checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
         }
 
-        firstsetup = false;
+        locationClient.getLastLocation()
+                .addOnSuccessListener(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), zoomFactor));
+                        }
+                    }
+                });
     }
 
 
@@ -253,10 +200,6 @@ public class GoogleMapsFragment extends Fragment implements OnInfoWindowClickLis
     @Override
     public void onStart() {
         super.onStart();
-
-        if (!firstsetup) {
-            startUp();
-        }
     }
 
 
@@ -300,7 +243,7 @@ public class GoogleMapsFragment extends Fragment implements OnInfoWindowClickLis
         googleMap.setOnMarkerClickListener(this);
         googleMap.setOnInfoWindowClickListener(this);
         googleMap.clear();
-        setLocationEnabled(true);
+        requestPermission();
 
         googleMap.setOnCameraChangeListener(new OnCameraChangeListener() {
             @Override
@@ -312,4 +255,19 @@ public class GoogleMapsFragment extends Fragment implements OnInfoWindowClickLis
 
         setUpMap();
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_ACCESS_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    googleMap.setMyLocationEnabled(true);
+                    return;
+                }
+            }
+        }
+    }
+
 }

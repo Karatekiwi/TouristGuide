@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.fragment.app.Fragment;
-import at.ac.tuwien.touristguide.tools.DatabaseHandler;
+import at.ac.tuwien.touristguide.db.DatabaseHandler;
 import at.ac.tuwien.touristguide.tools.MultiSelectionSpinner;
 import at.ac.tuwien.touristguide.tools.PoiHolder;
 

@@ -2,16 +2,13 @@ package at.ac.tuwien.touristguide;
 
 
 import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -22,10 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import at.ac.tuwien.touristguide.service.LocationService;
-import at.ac.tuwien.touristguide.service.LocationService.LocalBinder;
+import at.ac.tuwien.touristguide.db.DatabaseHandler;
 import at.ac.tuwien.touristguide.service.TTSHelper;
-import at.ac.tuwien.touristguide.tools.DatabaseHandler;
 
 
 /**
@@ -37,16 +32,11 @@ public class MainActivity extends AppCompatActivity implements
 
     private NavigationDrawerFragment navigationDrawerFragment;
     private CharSequence mTitle;
-    private LocationService locationService;
-    private boolean bound = false;
     private boolean exit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Intent intent = new Intent(this, LocationService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
         setContentView(R.layout.activity_main);
 
@@ -61,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements
         exit = true;
     }
 
-
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -70,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements
             String action = intent.getAction();
             if (action.contains("noti")) {
                 GuiderDetailsFragment fragment = new GuiderDetailsFragment();
-                fragment.setLocationService(locationService);
                 fragment.setSpecificPoi(DatabaseHandler.getInstance(this).getPoiByWikiId(action.split(" ")[1]));
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.container, fragment).addToBackStack("overview").commitAllowingStateLoss();
@@ -91,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements
         super.onConfigurationChanged(newConfig);
     }
 
-
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         Fragment currentFragment = null;
@@ -102,41 +89,34 @@ public class MainActivity extends AppCompatActivity implements
                 if (navigationDrawerFragment != null) {
                     navigationDrawerFragment.setDetails(false);
                 }
-                setLocationUpates(false);
 
                 mTitle = getResources().getStringArray(R.array.nav_drawer_items)[0];
                 GuiderFragment gf = new GuiderFragment();
                 gf.setNavigationDrawerFragment(navigationDrawerFragment);
-                gf.setLocationService(locationService);
                 currentFragment = gf;
                 break;
             case 1:
-                setLocationUpates(true);
                 if (navigationDrawerFragment != null) {
                     navigationDrawerFragment.setDetails(false);
                 }
                 mTitle = getResources().getStringArray(R.array.nav_drawer_items)[1];
                 NearbyFragment nbf = new NearbyFragment();
-                nbf.setNavigationDrawerFragment(navigationDrawerFragment);
+                nbf.setNavFragment(navigationDrawerFragment);
                 currentFragment = nbf;
                 break;
             case 2:
-                setLocationUpates(true);
                 mTitle = getResources().getStringArray(R.array.nav_drawer_items)[2];
                 currentFragment = new GoogleMapsFragment();
                 break;
             case 3:
-                setLocationUpates(false);
                 mTitle = getResources().getStringArray(R.array.nav_drawer_items)[3];
                 currentFragment = new SettingsFragment();
                 break;
             case 4:
-                setLocationUpates(false);
                 mTitle = getResources().getStringArray(R.array.nav_drawer_items)[4];
                 currentFragment = new UpdateFragment();
                 break;
             case 5:
-                setLocationUpates(false);
                 mTitle = getResources().getStringArray(R.array.nav_drawer_items)[5];
                 currentFragment = new AboutFragment();
                 break;
@@ -149,17 +129,6 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             Log.e(this.toString(), "Error in creating fragment");
         }
-    }
-
-    private void setLocationUpates(boolean start) {
-        if (bound) {
-            if (start) {
-                locationService.startLocationUpdates();
-            } else {
-                locationService.stopLocationUpdates();
-            }
-        }
-
     }
 
     public void restoreActionBar() {
@@ -210,7 +179,6 @@ public class MainActivity extends AppCompatActivity implements
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
                     stopService(new Intent(context, TTSHelper.class));
-                    stopService(new Intent(context, LocationService.class));
                     System.exit(0);
                 }
             });
@@ -232,23 +200,6 @@ public class MainActivity extends AppCompatActivity implements
     public void setExit(boolean exit) {
         this.exit = exit;
     }
-
-    ServiceConnection mConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            LocalBinder binder = (LocalBinder) service;
-            locationService = binder.getService();
-            onNavigationDrawerItemSelected(0);
-            bound = true;
-            setLocationUpates(false);
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            bound = false;
-        }
-    };
 
     @Override
     protected void onDestroy() {

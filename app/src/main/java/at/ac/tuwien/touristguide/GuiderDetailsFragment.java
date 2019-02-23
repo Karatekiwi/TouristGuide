@@ -58,11 +58,10 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import at.ac.tuwien.touristguide.db.DatabaseHandler;
 import at.ac.tuwien.touristguide.entities.Poi;
 import at.ac.tuwien.touristguide.entities.Section;
-import at.ac.tuwien.touristguide.service.LocationService;
 import at.ac.tuwien.touristguide.service.TTSHelper;
-import at.ac.tuwien.touristguide.tools.DatabaseHandler;
 import at.ac.tuwien.touristguide.tools.HeightHelper;
 import at.ac.tuwien.touristguide.tools.NLPHelper;
 import at.ac.tuwien.touristguide.tools.PoiHolder;
@@ -110,13 +109,111 @@ public class GuiderDetailsFragment extends Fragment implements OnMapReadyCallbac
     private Marker lastOpenned;
     private SupportMapFragment mapFrag;
     private ScrollView scrollView;
+    /**
+     * implemented for the combination scrollview + googlemaps, so that the map part can
+     * be scrolled independently
+     */
+    OnTouchListener otl = new OnTouchListener() {
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            int action = event.getAction();
+            switch (action) {
+                case MotionEvent.ACTION_DOWN:
+                    // Disallow ScrollView to intercept touch events.
+                    scrollView.requestDisallowInterceptTouchEvent(true);
+                    // Disable touch on transparent view
+                    return false;
+
+                case MotionEvent.ACTION_UP:
+                    // Allow ScrollView to intercept touch events.
+                    scrollView.requestDisallowInterceptTouchEvent(false);
+                    return true;
+
+                case MotionEvent.ACTION_MOVE:
+                    scrollView.requestDisallowInterceptTouchEvent(true);
+                    return false;
+
+                default:
+                    return true;
+            }
+        }
+    };
+    /**
+     * when the TTS engine is done with a line, onDone() of the upl gets called
+     */
+    UtteranceProgressListener upl = new UtteranceProgressListener() {
+
+        @Override
+        public void onStart(String utteranceId) {
+        }
+
+        @Override
+        public void onError(String utteranceId) {
+        }
+
+        @Override
+        // gets called if sentence is finished or tts.stop() is called
+        public void onDone(String utteranceId) {
+            if (playing) {
+                counter++;
+
+                if (counter < splitspeech.length) {
+                    tts.speak(splitspeech[counter], TextToSpeech.QUEUE_FLUSH, myHash);
+                    highlightText();
+                }
+
+                // the article is read completely
+                else {
+                    counter = 0;
+
+                    activity.runOnUiThread(new Thread() {
+                        public void run() {
+                            try {
+                                setButtonEnabled(true, false, false, false, false);
+                                playing = false;
+
+                                //readPoi(LocationService.getLoc());
+
+                            } catch (Exception e) {
+                                Log.e(TAG, e.toString());
+                            }
+                        }
+                    });
+                }
+            }
+        }
+    };
     private ImageView transparentImage;
     private boolean helpShowing = false;
     private ProgressDialog pdialog;
     private ProgressDialog pdialog2;
-    private LocationService locationService;
     private List<Poi> poisAlreadyNotified;
     private Poi currentPoi;
+    /**
+     * BroadcastReceiver to get Location Updates from the Location Service
+     */
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals("better-loc")) {
+                Location loc = new Location("");
+                loc.setLatitude(intent.getExtras().getDouble("Latitude"));
+                loc.setLongitude(intent.getExtras().getDouble("Longitude"));
+
+                if (poiOnMap != null)
+                    initMap(poiOnMap);
+
+                if (playing) {
+                    searchForNearPois(loc);
+                }
+
+                if (!playing && !paused) {
+                    readPoi(loc);
+                }
+            }
+        }
+    };
 
     @Override
     public void onAttach(Activity activity) {
@@ -181,10 +278,6 @@ public class GuiderDetailsFragment extends Fragment implements OnMapReadyCallbac
         LocalBroadcastManager.getInstance(context).registerReceiver(mMessageReceiver, new IntentFilter("location-change"));
         LocalBroadcastManager.getInstance(context).registerReceiver(mMessageReceiver, new IntentFilter("gps-off"));
 
-        if (locationService != null) {
-            locationService.startLocationUpdates();
-        }
-
         poisAlreadyNotified = new ArrayList<>();
         rootView.setBackgroundColor(Color.WHITE);
 
@@ -237,7 +330,7 @@ public class GuiderDetailsFragment extends Fragment implements OnMapReadyCallbac
                 setButtonEnabled(false, true, true, true, true);
 
                 if (stopped) {
-                    readPoi(LocationService.getLoc());
+                    readPoi(null);
                 } else {
                     tts.speak(splitspeech[counter], TextToSpeech.QUEUE_FLUSH, myHash);
                     highlightText();
@@ -334,19 +427,7 @@ public class GuiderDetailsFragment extends Fragment implements OnMapReadyCallbac
             }
         });
 
-
-        error_btn.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (checkLocationServices()) {
-                    pdialog2.show();
-                    timerDelayRemoveDialog(5000, pdialog2);
-                }
-            }
-        });
     }
-
 
     /**
      * checks if there are other pois nearby and invokes the user notification
@@ -385,7 +466,6 @@ public class GuiderDetailsFragment extends Fragment implements OnMapReadyCallbac
         }
     }
 
-
     /**
      * Notification if user passes by near an attraction while guider is active
      *
@@ -415,7 +495,6 @@ public class GuiderDetailsFragment extends Fragment implements OnMapReadyCallbac
             numNotifications++;
         }
     }
-
 
     /**
      * 0: Unlimited (= max 4 per minute)
@@ -473,52 +552,6 @@ public class GuiderDetailsFragment extends Fragment implements OnMapReadyCallbac
 
 
     /**
-     * checks if the location services are enabled
-     *
-     * @return true if one of the location services is enabled, false otherwise
-     */
-    public boolean checkLocationServices() {
-        if (!LocationService.isProviderEnabled()) {
-            pdialog.dismiss();
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-            builder
-                    .setTitle(activity.getString(R.string.nf2))
-                    .setMessage(activity.getString(R.string.nf3))
-                    .setCancelable(false);
-
-            builder.setNegativeButton(activity.getString(R.string.ma4), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface di, int id) {
-                    showHelp(activity.getString(R.string.gdf12));
-                    activity.onBackPressed();
-                }
-            });
-
-            builder.setPositiveButton(activity.getString(R.string.ma5), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    Intent gpsOptionsIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(gpsOptionsIntent);
-
-                    new Handler().postDelayed(new Runnable() {
-                        public void run() {
-                            tv_error.setText(activity.getString(R.string.gdf14));
-                            setButtonVisibility(View.GONE, View.GONE, View.GONE, View.GONE, View.GONE, View.VISIBLE);
-                        }
-                    }, 1000);
-
-                }
-            });
-
-
-            AlertDialog alert = builder.create();
-            alert.show();
-        }
-
-        return true;
-    }
-
-
-    /**
      * initializes the text-to-speech engine
      */
     private void initTTS() {
@@ -531,7 +564,6 @@ public class GuiderDetailsFragment extends Fragment implements OnMapReadyCallbac
 
         tts.setOnUtteranceProgressListener(upl);
     }
-
 
     /**
      * reads the nearest poi for the given location
@@ -673,7 +705,6 @@ public class GuiderDetailsFragment extends Fragment implements OnMapReadyCallbac
         pdialog2.dismiss();
     }
 
-
     /**
      * highlights the current sentence and moves the edittext view to center this sentence
      * this feature can be disabled in the app settings
@@ -706,7 +737,6 @@ public class GuiderDetailsFragment extends Fragment implements OnMapReadyCallbac
         }
     }
 
-
     /**
      * checks if the screen is locked - used to disable highlighting on locked screen
      */
@@ -721,7 +751,6 @@ public class GuiderDetailsFragment extends Fragment implements OnMapReadyCallbac
         }
     }
 
-
     /**
      * initializes the google map - draws the marker and the route (if online)
      */
@@ -732,14 +761,12 @@ public class GuiderDetailsFragment extends Fragment implements OnMapReadyCallbac
         }
     }
 
-
     private void setLocationEnabled(boolean enabled) {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
         googleMap.setMyLocationEnabled(enabled);
     }
-
 
     /**
      * sets the buttons enabled state according to the status of the tts engine (paused,...)
@@ -751,7 +778,6 @@ public class GuiderDetailsFragment extends Fragment implements OnMapReadyCallbac
         fwd_btn.setEnabled(fwd);
         back_btn.setEnabled(back);
     }
-
 
     /**
      * sets the buttons visibility
@@ -765,18 +791,16 @@ public class GuiderDetailsFragment extends Fragment implements OnMapReadyCallbac
         error_btn.setVisibility(error);
     }
 
-
     public void timerDelayRemoveDialog(long time, final Dialog d) {
         new Handler().postDelayed(new Runnable() {
             public void run() {
                 if (d.isShowing()) {
                     d.dismiss();
-                    readPoi(LocationService.getLoc());
+                    //readPoi(LocationService.getLoc());
                 }
             }
         }, time);
     }
-
 
     /**
      * adds a short pause for the tts engine to react
@@ -789,22 +813,18 @@ public class GuiderDetailsFragment extends Fragment implements OnMapReadyCallbac
         }
     }
 
-
     // also gets called if screen locks
     @Override
     public void onStop() {
         super.onStop();
     }
 
-
     // also gets called after screen lock
     @Override
     public void onStart() {
         super.onStart();
         initTTS();
-        checkLocationServices();
     }
-
 
     @Override
     public void onDestroyView() {
@@ -822,119 +842,9 @@ public class GuiderDetailsFragment extends Fragment implements OnMapReadyCallbac
         super.onDestroyView();
     }
 
-
-    public void setLocationService(LocationService locationService) {
-        this.locationService = locationService;
-    }
-
-
     public void setSpecificPoi(Poi poi) {
         this.specificPoi = poi;
     }
-
-
-    /**
-     * when the TTS engine is done with a line, onDone() of the upl gets called
-     */
-    UtteranceProgressListener upl = new UtteranceProgressListener() {
-
-        @Override
-        public void onStart(String utteranceId) {
-        }
-
-        @Override
-        public void onError(String utteranceId) {
-        }
-
-        @Override
-        // gets called if sentence is finished or tts.stop() is called
-        public void onDone(String utteranceId) {
-            if (playing) {
-                counter++;
-
-                if (counter < splitspeech.length) {
-                    tts.speak(splitspeech[counter], TextToSpeech.QUEUE_FLUSH, myHash);
-                    highlightText();
-                }
-
-                // the article is read completely
-                else {
-                    counter = 0;
-
-                    activity.runOnUiThread(new Thread() {
-                        public void run() {
-                            try {
-                                setButtonEnabled(true, false, false, false, false);
-                                playing = false;
-
-                                readPoi(LocationService.getLoc());
-
-                            } catch (Exception e) {
-                                Log.e(TAG, e.toString());
-                            }
-                        }
-                    });
-                }
-            }
-        }
-    };
-
-    /**
-     * BroadcastReceiver to get Location Updates from the Location Service
-     */
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals("better-loc")) {
-                Location loc = new Location("");
-                loc.setLatitude(intent.getExtras().getDouble("Latitude"));
-                loc.setLongitude(intent.getExtras().getDouble("Longitude"));
-
-                if (poiOnMap != null)
-                    initMap(poiOnMap);
-
-                if (playing) {
-                    searchForNearPois(loc);
-                }
-
-                if (!playing && !paused) {
-                    readPoi(loc);
-                }
-            }
-        }
-    };
-
-    /**
-     * implemented for the combination scrollview + googlemaps, so that the map part can
-     * be scrolled independently
-     */
-    OnTouchListener otl = new OnTouchListener() {
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            int action = event.getAction();
-            switch (action) {
-                case MotionEvent.ACTION_DOWN:
-                    // Disallow ScrollView to intercept touch events.
-                    scrollView.requestDisallowInterceptTouchEvent(true);
-                    // Disable touch on transparent view
-                    return false;
-
-                case MotionEvent.ACTION_UP:
-                    // Allow ScrollView to intercept touch events.
-                    scrollView.requestDisallowInterceptTouchEvent(false);
-                    return true;
-
-                case MotionEvent.ACTION_MOVE:
-                    scrollView.requestDisallowInterceptTouchEvent(true);
-                    return false;
-
-                default:
-                    return true;
-            }
-        }
-    };
-
 
     @Override
     public void onResume() {
@@ -959,7 +869,7 @@ public class GuiderDetailsFragment extends Fragment implements OnMapReadyCallbac
                 .position(currentPoi.getLatLng())
                 .title(currentPoi.getName()));
 
-        Location loc = LocationService.getLoc();
+        Location loc = null;
 
         if (loc != null) {
             try {

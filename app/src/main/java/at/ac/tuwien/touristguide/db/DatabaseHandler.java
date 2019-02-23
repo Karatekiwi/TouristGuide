@@ -1,20 +1,18 @@
-package at.ac.tuwien.touristguide.tools;
+package at.ac.tuwien.touristguide.db;
 
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import at.ac.tuwien.touristguide.R;
-import at.ac.tuwien.touristguide.db.PoiDO;
-import at.ac.tuwien.touristguide.db.SectionDO;
-import at.ac.tuwien.touristguide.db.SettingsDO;
 import at.ac.tuwien.touristguide.entities.Poi;
 import at.ac.tuwien.touristguide.entities.Section;
 
@@ -22,18 +20,21 @@ import at.ac.tuwien.touristguide.entities.Section;
 /**
  * @author Manu Weilharter
  */
-public class DatabaseHandler extends SQLiteOpenHelper {
+public class DatabaseHandler extends SQLiteAssetHelper {
 
-    private static final int DATABASE_VERSION = 3;
     private static final String TAG = DatabaseHandler.class.getName();
-    private static final String DATABASE_NAME = "touristguide.db";
+
+    private static String DB_NAME = "touristguide.db";
+    private static int DB_VERSION = 1;
 
     private static DatabaseHandler instance;
     private Context context;
 
 
     private DatabaseHandler(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, DB_NAME, null, DB_VERSION);
+        setForcedUpgrade();
+
         this.context = context;
     }
 
@@ -772,18 +773,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return poi;
     }
 
-    @Override
-    public void onCreate(SQLiteDatabase db) {
+    public void createTables(SQLiteDatabase db) {
         db.execSQL(PoiDO.SQL_CREATE);
         db.execSQL(SectionDO.SQL_CREATE);
         db.execSQL(SettingsDO.SQL_CREATE);
 
         db.execSQL(PoiDO.SQL_CREATE_INDEX);
         db.execSQL(SectionDO.SQL_CREATE_INDEX);
+
+        db.execSQL(SettingsDO.SQL_DEFAULT_SETTINGS);
+
     }
 
-    @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        if (oldVersion != newVersion) {
+            db.execSQL(PoiDO.SQL_DROP);
+            db.execSQL(SettingsDO.SQL_DROP);
+            db.execSQL(SectionDO.SQL_DROP);
 
+            onCreate(db);
+        }
     }
 }

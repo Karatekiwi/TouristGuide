@@ -121,10 +121,10 @@ public class NearbyFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private void initSwipeLayout(View rootView) {
         swipeLayout = rootView.findViewById(R.id.srl_locations);
         swipeLayout.setOnRefreshListener(this);
-        swipeLayout.setColorScheme(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
+        swipeLayout.setColorScheme(android.R.color.holo_orange_light,
+                R.color.app_primary,
                 android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
+                R.color.app_primary);
     }
 
     private void initListView(View rootView) {

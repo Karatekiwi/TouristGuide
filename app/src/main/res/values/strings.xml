@@ -131,17 +131,6 @@
     <string name="sf11">Are you sure you want to reset the data? All visited POIs will be marked unvisited again.</string>
     <string name="sf12">Success! Data has been reset!</string>
 
-    <string-array name="sf13">
-        <item>25</item>
-        <item>50</item>
-        <item>100</item>
-        <item>250</item>
-        <item>500</item>
-        <item>1000</item>
-        <item>2500</item>
-        <item>5000</item>
-    </string-array>
-
     <string name="sf14">Please choose the maximum distance for the automatic guider.</string>
     <string name="sf15">Reset</string>
     <string name="sf16">Preferences</string>
@@ -149,13 +138,6 @@
     <string name="sf18">How many notifications should be received:</string>
     <string name="sf19">Hide visited sights:</string>
     <string name="sf20">Use an own TTS engine (requires restart):</string>
-    <string-array name="sf21">
-        <item>Unlimited</item>
-        <item>1 per Minute</item>
-        <item>1 per &#189; Hour</item>
-        <item>1 per Hour</item>
-        <item>None</item>
-    </string-array>
 
     <!-- UpdateFragment Class -->
     <string name="uf1">You can update your application manually with this button. An internet connection is required.</string>

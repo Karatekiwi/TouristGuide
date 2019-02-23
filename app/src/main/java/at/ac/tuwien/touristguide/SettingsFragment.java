@@ -3,27 +3,24 @@ package at.ac.tuwien.touristguide;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import at.ac.tuwien.touristguide.db.DatabaseHandler;
 import at.ac.tuwien.touristguide.tools.MultiSelectionSpinner;
@@ -37,29 +34,24 @@ import at.ac.tuwien.touristguide.tools.PoiHolder;
 public class SettingsFragment extends Fragment {
 
     private List<String> categories = new ArrayList<>();
-    private MultiSelectionSpinner spinner_categories;
     private Activity activity;
     private Toast toast;
 
     private boolean initDone;
 
-
-    private String[] items;
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         activity = getActivity();
-        items = getResources().getStringArray(R.array.sf21);
 
         View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
         TextView tvCategories = rootView.findViewById(R.id.tv_settingsCategories);
         tvCategories.setText(activity.getString(R.string.sf1));
 
-        spinner_categories = rootView.findViewById(R.id.spinner_categories);
+        MultiSelectionSpinner spinner_categories = rootView.findViewById(R.id.spinner_categories);
         spinner_categories.setContext(activity);
-        initializeCategories();
+        categories.addAll(Arrays.asList(getResources().getStringArray(R.array.sf6)));
 
         spinner_categories.setItems(categories);
 
@@ -116,27 +108,6 @@ public class SettingsFragment extends Fragment {
 
         toast = Toast.makeText(activity, "", Toast.LENGTH_SHORT);
 
-        TextView tvDistance = rootView.findViewById(R.id.tv_settingsDistance);
-        tvDistance.setText(activity.getString(R.string.sf14));
-
-        Spinner spinner_distance = rootView.findViewById(R.id.spinner_settingsDistance);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(activity, R.array.sf13, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner_distance.setAdapter(adapter);
-        spinner_distance.setSelection(getDistanceIndex(DatabaseHandler.getInstance(activity).getDistance()));
-        spinner_distance.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                DatabaseHandler.getInstance(activity).setDistance(Integer.parseInt(parent.getItemAtPosition(position).toString()));
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
         initDone = true;
         rootView.setBackgroundColor(Color.WHITE);
         return rootView;
@@ -154,28 +125,6 @@ public class SettingsFragment extends Fragment {
                 } else {
                     DatabaseHandler.getInstance(activity).setHighlight(0);
                 }
-            }
-        });
-
-        TextView tvNoti = rootView.findViewById(R.id.tv_noti);
-        tvNoti.setText(activity.getString(R.string.sf18));
-
-        Spinner spinner_noti = rootView.findViewById(R.id.spinner_noti);
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item, items);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner_noti.setAdapter(adapter);
-        spinner_noti.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view,
-                                       int position, long id) {
-                DatabaseHandler.getInstance(activity).setNotify(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
 
@@ -216,25 +165,6 @@ public class SettingsFragment extends Fragment {
         if (DatabaseHandler.getInstance(activity).getUseOwnTTS() == 1) {
             switchBtn4.setChecked(true);
         }
-        spinner_noti.setSelection(DatabaseHandler.getInstance(activity).getNotify());
-    }
-
-    private int getDistanceIndex(int distance) {
-        String[] distances = getResources().getStringArray(R.array.sf13);
-
-        for (int i = 0; i < distances.length; i++) {
-            if (Integer.parseInt(distances[i]) == distance)
-                return i;
-        }
-
-        return -1;
-    }
-
-    private void initializeCategories() {
-        Resources res = getResources();
-        for (String category : res.getStringArray(R.array.sf6)) {
-            categories.add(category);
-        }
     }
 
     OnSeekBarChangeListener sbcl = new OnSeekBarChangeListener() {
@@ -274,6 +204,7 @@ public class SettingsFragment extends Fragment {
             }
         }
     };
+
 
 }
 

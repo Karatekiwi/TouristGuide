@@ -267,7 +267,7 @@ public class Utilities {
             }
 
             boolean abbrFound = false;
-            for (String abbr : NLPHelper.abbrevations) {
+            for (String abbr : NLPHelper.ABBREVATIONS) {
                 if (splitText[i].endsWith(abbr)) {
                     sentence += splitText[i] + ". ";
                     newSentence = false;

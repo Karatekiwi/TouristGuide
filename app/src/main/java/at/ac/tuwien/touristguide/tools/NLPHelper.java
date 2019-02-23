@@ -2,7 +2,6 @@ package at.ac.tuwien.touristguide.tools;
 
 
 import android.app.Activity;
-import android.content.res.Resources;
 import android.util.Log;
 
 import org.jsoup.Jsoup;
@@ -22,24 +21,17 @@ import at.ac.tuwien.touristguide.summarizer.SimpleSummariser;
 
 /**
  * @author Manu Weilharter
- *         prepares the text of the POI for the TextView
+ * prepares the text of the POI for the TextView
  */
 public class NLPHelper {
 
-    public static List<String> abbrevations = Arrays.asList("hl", "k.u.k", "k.k", "k. k", "K.k", "vgl", " op", "usw", " z", "B", "z.b", "z.B", "bzw", "usw", "cf", "etc", "Dr", "Mag", "Dipl", "Ing", "techn");
-    private List<String> categories = new ArrayList<>();
+    public static final List<String> ABBREVATIONS = Arrays.asList("hl", "k.u.k", "k.k", "k. k", "K.k", "vgl", " op", "usw", " z", "B", "z.b", "z.B", "bzw", "usw", "cf", "etc", "Dr", "Mag", "Dipl", "Ing", "techn");
+
     private Activity activity;
 
     public NLPHelper(Activity activity) {
         this.activity = activity;
-
-        Resources res = activity.getResources();
-
-        for (String cat : res.getStringArray(R.array.sf6)) {
-            categories.add(cat);
-        }
     }
-
 
     public String structureTextForView(List<Section> sections, int infoLevel) {
         String result = "";
@@ -101,7 +93,7 @@ public class NLPHelper {
     }
 
 
-    public String[] getSentences(String text) {
+    private String[] getSentences(String text) {
         // remove html tags not supported by edittext
         text = text.replace("<p>", "").replace("</p>", "");
         text = text.replace("<ul>", "").replace("</ul>", "");
@@ -113,7 +105,7 @@ public class NLPHelper {
         String pattern = "\\. ";
         String[] splitText = text.split(pattern);
 
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
 
         if (splitText.length == 1) {
             if (splitText[0].endsWith(".")) {
@@ -143,7 +135,7 @@ public class NLPHelper {
             }
 
             boolean abbrFound = false;
-            for (String abbr : abbrevations) {
+            for (String abbr : ABBREVATIONS) {
                 if (splitText[i].endsWith(abbr)) {
                     sentence += splitText[i] + ". ";
                     newSentence = false;

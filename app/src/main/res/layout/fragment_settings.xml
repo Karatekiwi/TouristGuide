@@ -14,9 +14,9 @@
             android:id="@+id/tv_header_1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20sp"
-            android:layout_marginRight="20sp"
             android:layout_marginTop="10sp"
+            android:padding="5dp"
+            android:gravity="center"
             android:background="@color/app_primary"
             android:text="@string/sf16"
             android:textColor="#ffffff"
@@ -38,15 +38,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_settingsCategories"
-            android:layout_marginBottom="10sp"
+            android:layout_marginBottom="20sp"
             android:layout_marginLeft="20sp"
             android:layout_marginRight="20sp" />
+
+        <View
+            android:id="@+id/line_1"
+            android:layout_width="fill_parent"
+            android:layout_below="@+id/spinner_categories"
+            android:layout_height="1dip"
+            android:background="@color/gray" />
 
         <TextView
             android:id="@+id/tv_infoLevel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/spinner_categories"
+            android:layout_below="@+id/line_1"
             android:layout_marginBottom="10sp"
             android:layout_marginLeft="20sp"
             android:layout_marginRight="20sp"
@@ -68,6 +75,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_below="@+id/seekBar1"
+            android:layout_marginBottom="20sp"
             android:orientation="horizontal">
 
             <TextView
@@ -91,33 +99,19 @@
                 android:layout_marginRight="20sp" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_settingsDistance"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/seekBar1"
-            android:layout_marginBottom="10sp"
-            android:layout_marginLeft="20sp"
-            android:layout_marginRight="20sp"
-            android:layout_marginTop="50sp"
-            android:textSize="16sp" />
-
-        <Spinner
-            android:id="@+id/spinner_settingsDistance"
+        <View
+            android:id="@+id/line_2"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/tv_settingsDistance"
-            android:layout_marginBottom="20sp"
-            android:layout_marginLeft="20sp"
-            android:layout_marginRight="20sp" />
-
+            android:layout_below="@+id/linearLayout"
+            android:layout_height="1dip"
+            android:background="@color/gray" />
 
         <!-- Highlight -->
         <TextView
             android:id="@+id/tv_highlight"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/spinner_settingsDistance"
+            android:layout_below="@+id/line_2"
             android:layout_marginBottom="10sp"
             android:layout_marginLeft="20sp"
             android:layout_marginRight="20sp"
@@ -130,15 +124,23 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/tv_highlight"
             android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10sp"
             android:textOff="Off"
             android:textOn="On" />
+
+        <View
+            android:id="@+id/line_3"
+            android:layout_width="fill_parent"
+            android:layout_below="@+id/switchBtn"
+            android:layout_height="1dip"
+            android:background="@color/gray" />
 
         <!-- Hide visited pois -->
         <TextView
             android:id="@+id/tv_hide"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/switchBtn"
+            android:layout_below="@+id/line_3"
             android:layout_marginBottom="10sp"
             android:layout_marginLeft="20sp"
             android:layout_marginRight="20sp"
@@ -149,10 +151,18 @@
             android:id="@+id/switchBtn3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10sp"
             android:layout_below="@+id/tv_hide"
             android:layout_centerHorizontal="true"
             android:textOff="Off"
             android:textOn="On" />
+
+        <View
+            android:id="@+id/line_4"
+            android:layout_width="fill_parent"
+            android:layout_below="@+id/switchBtn3"
+            android:layout_height="1dip"
+            android:background="@color/gray" />
 
 
         <!-- TTS -->
@@ -160,7 +170,7 @@
             android:id="@+id/tv_tts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/switchBtn3"
+            android:layout_below="@+id/line_4"
             android:layout_marginBottom="10sp"
             android:layout_marginLeft="20sp"
             android:layout_marginRight="20sp"
@@ -177,34 +187,14 @@
             android:textOn="On" />
 
 
-        <!-- Notifications -->
-        <TextView
-            android:id="@+id/tv_noti"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/switchBtn4"
-            android:layout_marginBottom="10sp"
-            android:layout_marginLeft="20sp"
-            android:layout_marginRight="20sp"
-            android:layout_marginTop="20sp"
-            android:textSize="16sp" />
-
-        <Spinner
-            android:id="@+id/spinner_noti"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/tv_noti"
-            android:layout_marginLeft="20sp"
-            android:layout_marginRight="20sp" />
-
         <TextView
             android:id="@+id/tv_header_2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/spinner_noti"
-            android:layout_marginLeft="20sp"
-            android:layout_marginRight="20sp"
+            android:layout_below="@+id/switchBtn4"
             android:layout_marginTop="20sp"
+            android:gravity="center"
+            android:padding="5dp"
             android:background="@color/app_primary"
             android:text="@string/sf15"
             android:textColor="#ffffff"

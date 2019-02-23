@@ -32,7 +32,7 @@
     <string name="splash">splash</string>
 
     <!-- Reset -->
-    <string name="reset">Reset</string>
+    <string name="reset">Zurücksetzen</string>
 
     <!-- Guider Fragment Button -->
     <string name="guider">Führung</string>
@@ -131,17 +131,6 @@
     <string name="sf11">Sind Sie sicher, dass Sie die Daten zurücksetzen möchten? Alle besuchten POIs werden wieder als unbesucht markiert.</string>
     <string name="sf12">Erfolg! Daten wurden zurückgesetzt!</string>
 
-    <string-array name="sf13">
-        <item>25</item>
-        <item>50</item>
-        <item>100</item>
-        <item>250</item>
-        <item>500</item>
-        <item>1000</item>
-        <item>2500</item>
-        <item>5000</item>
-    </string-array>
-
     <string name="sf14">Bitte wählen Sie die maximale Distanz für den Automatic Guider.</string>
     <string name="sf15">Reset</string>
     <string name="sf16">Präferenzen</string>
@@ -149,13 +138,6 @@
     <string name="sf18">Wieviele Benachrichtigungen sollen empfangen werden:</string>
     <string name="sf19">Verstecken von bereits besichtigten Sehenswürdigkeiten:</string>
     <string name="sf20">Verwenden einer eigenen TTS Engine (erfordert Neustart):</string>
-    <string-array name="sf21">
-        <item>Unbeschränkt</item>
-        <item>1 pro Minute</item>
-        <item>1 pro &#189; Stunde</item>
-        <item>1 pro Stunde</item>
-        <item>Keine</item>
-    </string-array>
 
     <!-- UpdateFragment Class -->
     <string name="uf1">Sie können Ihre Anwendung mit diesem Knopf manuell aktualisieren. Dazu wird eine aktive Internetverbindung benötigt!</string>

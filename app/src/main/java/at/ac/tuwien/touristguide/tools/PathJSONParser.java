@@ -2,9 +2,12 @@ package at.ac.tuwien.touristguide.tools;
 
 
 import android.util.Log;
+
 import com.google.android.gms.maps.model.LatLng;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

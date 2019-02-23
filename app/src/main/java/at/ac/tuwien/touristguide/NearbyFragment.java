@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Locale;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -68,7 +67,6 @@ public class NearbyFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     private List<Poi> nearestPois;
 
-    private NavigationDrawerFragment navFragment;
     private FusedLocationProviderClient locationClient;
     private SwipeRefreshLayout swipeLayout;
 
@@ -134,7 +132,6 @@ public class NearbyFragment extends Fragment implements SwipeRefreshLayout.OnRef
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 PoiDetailsFragment fragment = new PoiDetailsFragment();
-                navFragment.setDetails(true);
 
                 int index = lv_nearby.getFirstVisiblePosition();
                 View childView = lv_nearby.getChildAt(0);
@@ -145,7 +142,6 @@ public class NearbyFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).addToBackStack("overview").commitAllowingStateLoss();
                 viewDetails = true;
 
-                ((MainActivity) activity).setExit(false);
             }
         });
     }
@@ -281,11 +277,6 @@ public class NearbyFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     private boolean permissionGranted(int[] grantResults) {
         return grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
-    }
-
-
-    public void setNavFragment(NavigationDrawerFragment navFragment) {
-        this.navFragment = navFragment;
     }
 
     @Override

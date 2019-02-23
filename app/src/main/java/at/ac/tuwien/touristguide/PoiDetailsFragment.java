@@ -41,20 +41,19 @@ import java.util.Locale;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import at.ac.tuwien.touristguide.db.DatabaseHandler;
 import at.ac.tuwien.touristguide.entities.Poi;
 import at.ac.tuwien.touristguide.entities.Section;
-import at.ac.tuwien.touristguide.service.TTSHelper;
-import at.ac.tuwien.touristguide.db.DatabaseHandler;
 import at.ac.tuwien.touristguide.tools.HeightHelper;
 import at.ac.tuwien.touristguide.tools.NLPHelper;
 import at.ac.tuwien.touristguide.tools.PoiHolder;
 import at.ac.tuwien.touristguide.tools.RouteHelper;
+import at.ac.tuwien.touristguide.tools.TTSHelper;
 
 
 /**
  * @author Manu Weilharter
  */
-@SuppressWarnings("deprecation")
 public class PoiDetailsFragment extends Fragment implements OnMapReadyCallback {
 
     private static final String TAG = PoiDetailsFragment.class.getName();
@@ -175,13 +174,13 @@ public class PoiDetailsFragment extends Fragment implements OnMapReadyCallback {
         });
 
         TextView tv_poidetails_header = rootView.findViewById(R.id.tv_poidetails_header);
-        edittext_content =  rootView.findViewById(R.id.edittext_content);
+        edittext_content = rootView.findViewById(R.id.edittext_content);
         edittext_content.setKeyListener(null);
-        edittext_content.setHighlightColor(Color.parseColor("#E0F0FF"));
+        edittext_content.setHighlightColor(activity.getResources().getColor(R.color.app_secondary));
         edittext_content.setPressed(true);
         edittext_content.setMinHeight(new HeightHelper(activity).getHeight());
 
-        tv_poidetails_header.setText(Html.fromHtml("<font color=\"#769AC9\">" + poi.getName() + "<font>"));
+        tv_poidetails_header.setText(poi.getName());
 
         if (infoLevel == 1) {
             sections = styler.summarizeSections(DatabaseHandler.getInstance(activity).getSectionsForPoi(poi));
@@ -281,12 +280,13 @@ public class PoiDetailsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void initTTS() {
-        tts = TTSHelper.tts;
+        tts = TTSHelper.getInstance(activity).getTTS();
 
-        if (Locale.getDefault().getLanguage().equals("de"))
+        if (Locale.getDefault().getLanguage().equals("de")) {
             tts.setLanguage(Locale.GERMAN);
-        else
+        } else {
             tts.setLanguage(Locale.US);
+        }
 
         tts.setOnUtteranceProgressListener(oupl);
     }
@@ -391,7 +391,6 @@ public class PoiDetailsFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
-
     private void highlightText() {
         if (DatabaseHandler.getInstance(activity).getHighlight() == 1) {
             if (counter >= splitspeech.length) {
@@ -434,7 +433,6 @@ public class PoiDetailsFragment extends Fragment implements OnMapReadyCallback {
         back_btn.setEnabled(back);
     }
 
-
     /**
      * introduces a short pause, fix for tts problem (sometimes after calling tts.stop() still another sentence got read)
      */
@@ -445,7 +443,6 @@ public class PoiDetailsFragment extends Fragment implements OnMapReadyCallback {
             Log.e(TAG, e.toString());
         }
     }
-
 
     @Override
     public void onDestroyView() {
@@ -466,11 +463,9 @@ public class PoiDetailsFragment extends Fragment implements OnMapReadyCallback {
         super.onDestroyView();
     }
 
-
     public void setPoi(Poi poi) {
         this.poi = poi;
     }
-
 
     @Override
     public void onStop() {

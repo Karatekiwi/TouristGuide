@@ -2,7 +2,6 @@ package at.ac.tuwien.touristguide.tools;
 
 import android.app.Activity;
 import android.content.Context;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,16 +55,20 @@ public class CustomListViewAdapterNearby extends ArrayAdapter<RowItem> {
 
             // List Header
             if (rowItem.getVisited() == 0) {
-                holder.txtTitle.setText(Html.fromHtml("<font color=\"#668DC2\">" + rowItem.getTitle() + "<font>"));
+                holder.txtTitle.setText(rowItem.getTitle());
+                holder.txtTitle.setTextColor(context.getResources().getColor(R.color.app_primary));
             } else {
-                holder.txtTitle.setText(Html.fromHtml("<font color=\"#8f8f8f\">" + rowItem.getTitle() + "<font>"));
+                holder.txtTitle.setText(rowItem.getTitle());
+                holder.txtTitle.setTextColor(context.getResources().getColor(R.color.dark_gray));
             }
 
             // List Content
             if (rowItem.getVisited() == 0) {
-                holder.txtDesc.setText(Html.fromHtml("<font color=\"black\">" + rowItem.getDesc() + "...<font>"));
+                holder.txtDesc.setText(rowItem.getDesc());
+                holder.txtDesc.setTextColor(context.getResources().getColor(R.color.black));
             } else {
-                holder.txtDesc.setText(Html.fromHtml("<font color=\"#bfbfbf\">" + rowItem.getDesc() + "...<font>"));
+                holder.txtDesc.setText(rowItem.getDesc());
+                holder.txtDesc.setTextColor(context.getResources().getColor(R.color.gray));
             }
 
             holder.imageView.setImageResource(rowItem.getImageId());

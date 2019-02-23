@@ -186,7 +186,6 @@ public class GoogleMapsFragment extends Fragment implements OnInfoWindowClickLis
             getActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, fragment).addToBackStack("overview").commitAllowingStateLoss();
 
-            ((MainActivity) activity).setExit(false);
         }
 
     }

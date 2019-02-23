@@ -16,12 +16,6 @@
         android:largeHeap="true"
         android:theme="@style/ATGTheme">
 
-        <service
-            android:name=".service.TTSHelper"
-            android:enabled="true"
-            android:exported="false"
-            android:label="ATG TTS Service" />
-
         <activity
             android:name=".tools.SplashActivity"
             android:label="@string/app_name"

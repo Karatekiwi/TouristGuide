@@ -1,9 +1,6 @@
 package at.ac.tuwien.touristguide.tools;
 
 
-import java.io.InputStream;
-import java.util.List;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -16,6 +13,10 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+
+import java.io.InputStream;
+import java.util.List;
+
 import at.ac.tuwien.touristguide.entities.Poi;
 
 

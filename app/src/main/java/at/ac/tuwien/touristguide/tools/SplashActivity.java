@@ -7,7 +7,6 @@ import android.os.Handler;
 
 import at.ac.tuwien.touristguide.MainActivity;
 import at.ac.tuwien.touristguide.R;
-import at.ac.tuwien.touristguide.service.TTSHelper;
 
 
 /**

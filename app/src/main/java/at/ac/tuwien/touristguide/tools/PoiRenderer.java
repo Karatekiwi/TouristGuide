@@ -1,13 +1,16 @@
 package at.ac.tuwien.touristguide.tools;
 
 import android.content.Context;
+
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
+
 import java.util.HashMap;
+
 import at.ac.tuwien.touristguide.entities.PoiMarker;
 
 

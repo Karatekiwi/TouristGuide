@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.widget.TextView;
+
 import at.ac.tuwien.touristguide.R;
 
 

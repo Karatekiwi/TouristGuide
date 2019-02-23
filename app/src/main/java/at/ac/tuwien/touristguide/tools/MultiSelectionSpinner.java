@@ -10,9 +10,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
+
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+
 import at.ac.tuwien.touristguide.R;
 import at.ac.tuwien.touristguide.db.DatabaseHandler;
 

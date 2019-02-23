@@ -47,8 +47,6 @@ public class NavigationDrawerFragment extends Fragment {
     private boolean mFromSavedInstanceState;
     private boolean mUserLearnedDrawer;
 
-    private boolean details = false;
-
     public NavigationDrawerFragment() {
     }
 
@@ -232,27 +230,18 @@ public class NavigationDrawerFragment extends Fragment {
         if (item.getItemId() == R.id.help) {
             switch (mCurrentSelectedPosition) {
                 case 0:
-                    if (details)
-                        showHelp(activity.getString(R.string.ndf9));
-                    else
-                        showHelp(activity.getString(R.string.ndf1));
+                    showHelp(activity.getString(R.string.ndf2));
                     break;
                 case 1:
-                    if (details)
-                        showHelp("");
-                    else
-                        showHelp(activity.getString(R.string.ndf2));
-                    break;
-                case 2:
                     showHelp(activity.getString(R.string.ndf3));
                     break;
-                case 3:
+                case 2:
                     showHelp(activity.getString(R.string.ndf4));
                     break;
-                case 4:
+                case 3:
                     showHelp(activity.getString(R.string.ndf5));
                     break;
-                case 5:
+                case 4:
                     showHelp(activity.getString(R.string.ndf6));
                     break;
 
@@ -314,15 +303,11 @@ public class NavigationDrawerFragment extends Fragment {
         ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setTitle(Html.fromHtml("<font color=\"white\" size=\"16\" >" + getString(R.string.app_name) + "</font>"));
+        actionBar.setTitle(getString(R.string.app_name));
     }
 
     private ActionBar getActionBar() {
         return ((AppCompatActivity) getActivity()).getSupportActionBar();
-    }
-
-    public void setDetails(boolean details) {
-        this.details = details;
     }
 
 

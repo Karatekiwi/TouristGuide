@@ -1,14 +1,14 @@
-package at.ac.tuwien.touristguide.service;
+package at.ac.tuwien.touristguide.tools;
 
 
-import android.app.Service;
-import android.content.Intent;
-import android.os.IBinder;
+import android.content.Context;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.EngineInfo;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.util.Log;
+
 import java.util.Locale;
+
 import at.ac.tuwien.touristguide.db.DatabaseHandler;
 
 
@@ -16,28 +16,12 @@ import at.ac.tuwien.touristguide.db.DatabaseHandler;
  * @author Manu Weilharter
  * Background Service for the text-to-speech engine
  */
-@SuppressWarnings("deprecation")
-public class TTSHelper extends Service {
+public class TTSHelper {
 
-    public static TextToSpeech tts;
-    private float speechRate = (float) 1.2;
+    private static TTSHelper instance;
 
-    public TTSHelper() {
-        super();
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        initTTS();
-        return Service.START_STICKY;
-    }
-
-    public void initTTS() {
-        tts = new TextToSpeech(getApplicationContext(), tts_listener);
-        tts.setSpeechRate(speechRate);
-    }
-
-
+    public TextToSpeech tts;
+    private Context context;
     /**
      * initializes the text-to-speech listener
      */
@@ -45,7 +29,7 @@ public class TTSHelper extends Service {
 
         @Override
         public void onInit(int status) {
-            if (DatabaseHandler.getInstance(getApplicationContext()).getUseOwnTTS() == 0) {
+            if (DatabaseHandler.getInstance(context).getUseOwnTTS() == 0) {
                 for (EngineInfo ei : tts.getEngines()) {
                     if (ei.name.contains("google.android.tts")) {
                         tts.setEngineByPackageName(ei.name);
@@ -72,9 +56,27 @@ public class TTSHelper extends Service {
 
         }
     };
+    private float speechRate = (float) 1.2;
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
+    private TTSHelper(Context context) {
+        this.context = context;
+        initTTS();
+    }
+
+    public static TTSHelper getInstance(Context context) {
+        if (TTSHelper.instance == null) {
+            TTSHelper.instance = new TTSHelper(context);
+        }
+
+        return TTSHelper.instance;
+    }
+
+    public TextToSpeech getTTS() {
+        return tts;
+    }
+
+    public void initTTS() {
+        tts = new TextToSpeech(context, tts_listener);
+        tts.setSpeechRate(speechRate);
     }
 }

@@ -47,15 +47,15 @@ public class NLPHelper {
         for (Section sec : sections) {
             if (infoLevel != 2) {
                 if (sec.getCategory().equals("Architektur") | sec.getCategory().equals("Architecture")) {
-                    result += "<h3><font color='#32CD32'>|</font> <font color='#769AC9'>" + sec.getHeader() + "</h3></font>";
+                    result += "<h3><font color='#32CD32'>| </font> " + sec.getHeader() + "</h3>";
                 } else if (sec.getCategory().equals("Geschichte") | sec.getCategory().equals("History")) {
-                    result += "<h3><font color='#8A2BE2'>|</font> <font color='#769AC9'>" + sec.getHeader() + "</h3></font>";
+                    result += "<h3><font color='#8A2BE2'>| </font> " + sec.getHeader() + "</h3>";
                 } else if (sec.getCategory().equals("Sport") | sec.getCategory().equals("Sports")) {
-                    result += "<h3><font color='#7FFFD4'>|</font> <font color='#769AC9'>" + sec.getHeader() + "</h3></font>";
+                    result += "<h3><font color='#7FFFD4'>| </font> " + sec.getHeader() + "</h3>";
                 } else if (sec.getCategory().equals("Geografie") | sec.getCategory().equals("Geographie")) {
-                    result += "<h3><font color='#FFA07A'>|</font> <font color='#769AC9'>" + sec.getHeader() + "</h3></font>";
+                    result += "<h3><font color='#FFA07A'>| </font> " + sec.getHeader() + "</h3>";
                 } else {
-                    result += "<h3><font color='#769AC9'>" + sec.getHeader() + "</h3></font>";
+                    result += "<h3>" + sec.getHeader() + "</h3>";
                 }
             }
 

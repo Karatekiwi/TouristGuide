@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import at.ac.tuwien.touristguide.R;
 import at.ac.tuwien.touristguide.entities.Poi;
 
 
@@ -28,14 +29,29 @@ import at.ac.tuwien.touristguide.entities.Poi;
 public class RouteHelper {
 
     private static final String TAG = RouteHelper.class.getName();
+    private final Context context;
 
     private GoogleMap googleMap;
 
-    public RouteHelper(GoogleMap googleMap) {
+    public RouteHelper(GoogleMap googleMap, Context context) {
         this.googleMap = googleMap;
+        this.context = context;
     }
 
-    public static String getMapsApiDirectionsUrl(Location loc, Poi poi) {
+    /**
+     * checks if the user has an active internet connection, which is required for the update
+     *
+     * @param activity the Activity
+     * @return true if the user has an active internet connection, false otherwise
+     */
+    public boolean isOnline(Activity activity) {
+        ConnectivityManager cm = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    public String getMapsApiDirectionsUrl(Location loc, Poi poi) {
         String waypoints = "waypoints=optimize:true|"
                 + poi.getLatitude() + "," + poi.getLongitude()
                 + "|" + loc.getLatitude() + "," + loc.getLongitude();
@@ -45,21 +61,10 @@ public class RouteHelper {
         String origin = "origin=" + poi.getLatitude() + "," + poi.getLongitude();
         String destination = "destination=" + loc.getLatitude() + "," + loc.getLongitude();
         String params = waypoints + "&" + sensor + "&" + mode;
+        String apiKey = "key=" + context.getResources().getString(R.string.API_KEY_SERVER);
         String output = "json";
 
-        return "https://maps.googleapis.com/maps/api/directions/" + output + "?" + origin + "&" + destination + "&" + params;
-    }
-
-    /**
-     * checks if the user has an active internet connection, which is required for the update
-     * @param activity the Activity
-     * @return true if the user has an active internet connection, false otherwise
-     */
-    public static boolean isOnline(Activity activity) {
-        ConnectivityManager cm = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-
-        return netInfo != null && netInfo.isConnectedOrConnecting();
+        return "https://maps.googleapis.com/maps/api/directions/" + output + "?" + origin + "&" + destination + "&" + params + "&" + apiKey;
     }
 
     public void createReadTask(String url) {
@@ -107,7 +112,7 @@ public class RouteHelper {
 
         @Override
         protected void onPostExecute(List<List<HashMap<String, String>>> routes) {
-            if (routes == null) {
+            if (routes == null || routes.isEmpty()) {
                 return;
             }
 

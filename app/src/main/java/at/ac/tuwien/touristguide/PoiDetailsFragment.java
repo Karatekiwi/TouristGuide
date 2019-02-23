@@ -82,10 +82,12 @@ public class PoiDetailsFragment extends Fragment implements OnMapReadyCallback {
 
     private HashMap<String, String> myHash;
     private boolean playing;
+
+    private Location location;
     /**
      * when the tts engine is done with a line, onDone() of the oupl gets called
      */
-    UtteranceProgressListener oupl = new UtteranceProgressListener() {
+    private UtteranceProgressListener oupl = new UtteranceProgressListener() {
 
         @Override
         public void onStart(String utteranceId) {
@@ -269,12 +271,11 @@ public class PoiDetailsFragment extends Fragment implements OnMapReadyCallback {
                 .title(poi.getName()));
 
 
-        Location loc = null;
-
-        if (loc != null) {
-            if (RouteHelper.isOnline(activity)) {
-                String url = RouteHelper.getMapsApiDirectionsUrl(loc, poi);
-                new RouteHelper(googleMap).createReadTask(url);
+        if (location != null) {
+            RouteHelper routeHelper = new RouteHelper(googleMap, activity);
+            if (routeHelper.isOnline(activity)) {
+                String url = routeHelper.getMapsApiDirectionsUrl(location, poi);
+                routeHelper.createReadTask(url);
             }
         }
     }
@@ -478,10 +479,13 @@ public class PoiDetailsFragment extends Fragment implements OnMapReadyCallback {
         mapFrag.getMapAsync(this);
     }
 
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
         setupMap();
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 }

@@ -60,12 +60,13 @@ public class GoogleMapsFragment extends Fragment implements OnInfoWindowClickLis
 
     private ClusterManager<PoiMarker> mClusterManager;
     private Poi clickedPoi;
-    private float zoomFactor = 15;
+    private float zoomFactor = 14;
 
     private LatLngBounds bounds;
     private Marker lastOpened = null;
 
     private FusedLocationProviderClient locationClient;
+    private Location location;
 
 
     @Override
@@ -126,10 +127,16 @@ public class GoogleMapsFragment extends Fragment implements OnInfoWindowClickLis
                     @Override
                     public void onSuccess(Location location) {
                         if (location != null) {
+                            setLocation(location);
                             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), zoomFactor));
+                            googleMap.setMyLocationEnabled(true);
                         }
                     }
                 });
+    }
+
+    private void setLocation(Location location) {
+         this.location = location;
     }
 
 
@@ -182,6 +189,7 @@ public class GoogleMapsFragment extends Fragment implements OnInfoWindowClickLis
         if (clickedPoi != null) {
             PoiDetailsFragment fragment = new PoiDetailsFragment();
             fragment.setPoi(clickedPoi);
+            fragment.setLocation(location);
 
             getActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, fragment).addToBackStack("overview").commitAllowingStateLoss();

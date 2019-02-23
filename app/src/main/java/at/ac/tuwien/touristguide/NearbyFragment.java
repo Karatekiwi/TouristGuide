@@ -69,6 +69,7 @@ public class NearbyFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     private FusedLocationProviderClient locationClient;
     private SwipeRefreshLayout swipeLayout;
+    private CustomListViewAdapterNearby adapter;
 
 
     public NearbyFragment() {
@@ -139,6 +140,7 @@ public class NearbyFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 savePosition(index, top);
 
                 fragment.setPoi(nearestPois.get(position));
+                fragment.setLocation(location);
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment).addToBackStack("overview").commitAllowingStateLoss();
                 viewDetails = true;
 
@@ -217,7 +219,7 @@ public class NearbyFragment extends Fragment implements SwipeRefreshLayout.OnRef
             }
         }
 
-        CustomListViewAdapterNearby adapter = new CustomListViewAdapterNearby(activity, R.layout.listview_lines, rowItems);
+        adapter = new CustomListViewAdapterNearby(activity, R.layout.listview_lines, rowItems);
         lv_nearby.setAdapter(adapter);
 
         if (position != -1) {

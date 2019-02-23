@@ -23,7 +23,7 @@ import at.ac.tuwien.touristguide.entities.RowItem;
  */
 public class CustomListViewAdapterNearby extends ArrayAdapter<RowItem> {
 
-    Context context;
+    private Context context;
 
     public CustomListViewAdapterNearby(Context context, int resourceId,
                                        List<RowItem> items) {

@@ -21,18 +21,20 @@ import at.ac.tuwien.touristguide.tools.UpdateOperation;
 
 /**
  * @author Manu Weilharter
- *         <p/>
- *         Retrieves the current poi list from the Webservice
- *         Requires an active internet connection
+ * <p/>
+ * Retrieves the current poi list from the Webservice
+ * Requires an active internet connection
  */
 public class UpdateFragment extends Fragment {
 
     private Activity activity;
+    private RouteHelper routeHelper;
 
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         this.activity = activity;
+        this.routeHelper = new RouteHelper(null, activity);
     }
 
 
@@ -49,7 +51,7 @@ public class UpdateFragment extends Fragment {
 
         updateBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (RouteHelper.isOnline(activity)) {
+                if (routeHelper.isOnline(activity)) {
                     AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity).setCancelable(false);
                     alertDialog.setMessage(activity.getString(R.string.uf2));
                     alertDialog.setNegativeButton(activity.getString(R.string.gf3), new DialogInterface.OnClickListener() {

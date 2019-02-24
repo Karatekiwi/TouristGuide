@@ -2,8 +2,8 @@
 
 
 <resources>
-    <color name="app_primary">#558B2F</color>
-    <color name="app_secondary">#C5E1A5</color>
+    <color name="app_primary">#aa242f</color>
+    <color name="app_secondary">#e1882e</color>
     <color name="gray">#bfbfbf</color>
     <color name="light_gray">#EEEDED</color>
     <color name="dark_gray">#8f8f8f</color>

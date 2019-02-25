@@ -10,6 +10,7 @@ import android.util.Log;
 import java.util.Locale;
 
 import at.ac.tuwien.touristguide.db.DatabaseHandler;
+import at.ac.tuwien.touristguide.utils.LanguageUtils;
 
 
 /**
@@ -38,13 +39,8 @@ public class TTSHelper {
             }
 
             if (status == TextToSpeech.SUCCESS) {
-                int result;
-
-                if (Locale.getDefault().getLanguage().equals("de")) {
-                    result = tts.setLanguage(Locale.GERMAN);
-                } else {
-                    result = tts.setLanguage(Locale.US);
-                }
+                Locale locale = LanguageUtils.getLocale();
+                int result = tts.setLanguage(locale);
 
                 if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                     Log.e("", "This Language is not supported");

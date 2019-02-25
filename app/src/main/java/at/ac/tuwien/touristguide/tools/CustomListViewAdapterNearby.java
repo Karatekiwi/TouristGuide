@@ -15,6 +15,7 @@ import java.util.List;
 
 import at.ac.tuwien.touristguide.R;
 import at.ac.tuwien.touristguide.entities.RowItem;
+import at.ac.tuwien.touristguide.utils.LanguageUtils;
 
 
 /**
@@ -39,7 +40,7 @@ public class CustomListViewAdapterNearby extends ArrayAdapter<RowItem> {
             ViewHolderHeader holder2 = new ViewHolderHeader();
             holder2.txtTitle = convertView.findViewById(R.id.tv_listheader);
             holder2.txtTitle2 = convertView.findViewById(R.id.tv_listheader2);
-            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss", LanguageUtils.getLocale());
             holder2.txtTitle.setText(context.getResources().getString(R.string.lva1));
             holder2.txtTitle2.setText(context.getResources().getString(R.string.lva2) + " " + sdf.format(new Date()));
             convertView.setTag(holder2);

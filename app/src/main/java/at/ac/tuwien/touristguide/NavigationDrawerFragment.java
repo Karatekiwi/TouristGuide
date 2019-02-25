@@ -261,18 +261,19 @@ public class NavigationDrawerFragment extends Fragment {
         helpBuilder.setTitle(getActivity().getString(R.string.ndf8));
         String additionalText;
 
-        if (Locale.getDefault().getLanguage().equals("de"))
+        if (Locale.getDefault().getLanguage().equals("de")) {
             additionalText = "Der linke Rand neben den jeweiligen  Ueberschriften repraesentiert die Kategorie des Absatzes.<br />"
                     + "<font color='#32CD32'>|</font> Architektur<br />"
                     + "<font color='#8A2BE2'>|</font> Geschichte<br />"
                     + "<font color='#7FFFD4'>|</font> Sport<br />"
                     + "<font color='#FFA07A'>|</font> Geografie";
-        else
+        } else {
             additionalText = "The left border next to the headings represents the category of the section.<br />"
                     + "<font color='#32CD32'>|</font> Architecture<br />"
                     + "<font color='#8A2BE2'>|</font> History<br />"
                     + "<font color='#7FFFD4'>|</font> Sports<br />"
                     + "<font color='#FFA07A'>|</font> Geography";
+        }
 
         if (text.equals("")) {
             helpBuilder.setMessage(Html.fromHtml(additionalText));

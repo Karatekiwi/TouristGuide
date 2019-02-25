@@ -40,6 +40,7 @@ import at.ac.tuwien.touristguide.entities.Poi;
 import at.ac.tuwien.touristguide.entities.PoiMarker;
 import at.ac.tuwien.touristguide.tools.PoiHolder;
 import at.ac.tuwien.touristguide.tools.PoiRenderer;
+import at.ac.tuwien.touristguide.utils.LanguageUtils;
 
 import static androidx.core.content.PermissionChecker.checkSelfPermission;
 
@@ -96,12 +97,7 @@ public class GoogleMapsFragment extends Fragment implements OnInfoWindowClickLis
     }
 
     public void startUp() {
-        if (Locale.getDefault().getLanguage().equals("de")) {
-            allPois = PoiHolder.getPois_de();
-        } else {
-            allPois = PoiHolder.getPois_en();
-        }
-
+        allPois = PoiHolder.getPois(LanguageUtils.getLocale());
         mapFrag.getMapAsync(this);
     }
 

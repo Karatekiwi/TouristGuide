@@ -12,6 +12,7 @@ import java.util.Locale;
 
 import at.ac.tuwien.touristguide.db.DatabaseHandler;
 import at.ac.tuwien.touristguide.entities.Poi;
+import at.ac.tuwien.touristguide.utils.LanguageUtils;
 
 
 /**
@@ -82,7 +83,7 @@ public class PoiHolder {
      * @param lng2 longitude point 2
      * @return distance
      */
-    public static double distFrom(double lat1, double lng1, double lat2, double lng2) {
+    private static double distFrom(double lat1, double lng1, double lat2, double lng2) {
         double a = 6378137, b = 6356752.314245, f = 1 / 298.257223563; // WGS-84 ellipsoid params
         double L = Math.toRadians(lng2 - lng1);
         double U1 = Math.atan((1 - f) * Math.tan(Math.toRadians(lat1)));
@@ -156,11 +157,18 @@ public class PoiHolder {
         }
     }
 
-    public static List<Poi> getPois_de() {
+    public static List<Poi> getPois(Locale locale) {
         int hide = DatabaseHandler.getInstance(context).getHide();
-        List<Poi> result = new ArrayList<>();
 
-        for (Poi poi : allPois_de) {
+        List<Poi> result = new ArrayList<>();
+        List<Poi> allPois;
+        if (locale == Locale.GERMAN) {
+            allPois = allPois_de;
+        } else {
+            allPois = allPois_en;
+        }
+
+        for (Poi poi : allPois) {
             if (hide == 0) {
                 result.add(poi);
             }
@@ -172,26 +180,6 @@ public class PoiHolder {
 
         return result;
     }
-
-
-
-    public static List<Poi> getPois_en() {
-        int hide = DatabaseHandler.getInstance(context).getHide();
-        List<Poi> result = new ArrayList<>();
-
-        for (Poi poi : allPois_en) {
-            if (hide == 0) {
-                result.add(poi);
-            }
-
-            if ((hide == 1) && (poi.getVisited() == 0)) {
-                result.add(poi);
-            }
-        }
-
-        return result;
-    }
-
 
     public static void resetVisited() {
         if (allPois_en != null) {
@@ -218,7 +206,7 @@ public class PoiHolder {
 
         @Override
         protected Void doInBackground(URL... params) {
-            if (Locale.getDefault().getLanguage().equals("de")) {
+            if (LanguageUtils.getLanguage().equals("de")) {
                 allPois_de = DatabaseHandler.getInstance(context).getAllPois(false);
             } else {
                 allPois_en = DatabaseHandler.getInstance(context).getAllPois(true);

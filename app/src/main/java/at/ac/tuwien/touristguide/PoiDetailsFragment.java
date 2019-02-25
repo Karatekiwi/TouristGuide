@@ -49,6 +49,7 @@ import at.ac.tuwien.touristguide.tools.NLPHelper;
 import at.ac.tuwien.touristguide.tools.PoiHolder;
 import at.ac.tuwien.touristguide.tools.RouteHelper;
 import at.ac.tuwien.touristguide.tools.TTSHelper;
+import at.ac.tuwien.touristguide.utils.LanguageUtils;
 
 
 /**
@@ -283,12 +284,8 @@ public class PoiDetailsFragment extends Fragment implements OnMapReadyCallback {
     private void initTTS() {
         tts = TTSHelper.getInstance(activity).getTTS();
 
-        if (Locale.getDefault().getLanguage().equals("de")) {
-            tts.setLanguage(Locale.GERMAN);
-        } else {
-            tts.setLanguage(Locale.US);
-        }
-
+        Locale locale = LanguageUtils.getLocale();
+        tts.setLanguage(locale);
         tts.setOnUtteranceProgressListener(oupl);
     }
 
